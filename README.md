@@ -1,5 +1,5 @@
 <a herf="">
-    <img src="" alt="amov logo" title="amov" align="right" height="100" />
+    <img src="https://github.com/amov-lab/Amov-wiki/blob/master/images/LOGO%E7%99%BD%E5%BA%95.jpg" alt="amov logo" title="amov" align="right" height="100" />
 </a>
 
 # Amov-wiki Sources
