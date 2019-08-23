@@ -9,7 +9,9 @@ Welcome to amov_wiki's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :hidden:
+
+   Gazebo仿真搭建 <docs/Gazebo仿真搭建>
 
 
 
@@ -19,4 +21,5 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
 
