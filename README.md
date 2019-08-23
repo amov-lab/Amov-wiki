@@ -16,7 +16,7 @@ Wiki主页: - https://amov-wiki.readthedocs.io/zh_CN/latest/
 
 超详细的信息您可以通过扫描下面二维码来关注我们的微信公众号,里面包含了往期的干货推送,在我们社区的维护下定期会有干货的哦!
 
-<img src="" alt="amov_qr_code" title="WeChat qr code" />
+<img src="https://github.com/amov-lab/Amov-wiki/blob/master/images/amov_QR_code.jpg" alt="amov_qr_code" title="WeChat qr code" />
 
 
 
