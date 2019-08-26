@@ -9,7 +9,7 @@ Welcome to amov_wiki's documentation!
 .. toctree::
    :hidden:
 
-   px4_command <docs/Gazebo仿真搭建>
+   Gazebo仿真 <docs/Gazebo仿真搭建>
 
 
 
