@@ -6,20 +6,10 @@
 Welcome to amov_wiki's documentation!
 =====================================
 
-Contents:
-
 .. toctree::
    :hidden:
 
-   Gazebo仿真搭建 <docs/Gazebo仿真搭建>
+   px4_command <docs/Gazebo仿真搭建>
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 
 
