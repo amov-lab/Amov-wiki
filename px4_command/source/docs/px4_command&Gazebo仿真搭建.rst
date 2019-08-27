@@ -1,8 +1,8 @@
-.. Gazebo仿真搭建
+.. px4_command&Gazebo仿真搭建
 
-==============
-Gazebo仿真搭建
-==============
+===========================
+px4_command&Gazebo仿真搭建
+===========================
 
 PX4提供了一种全自主飞行控制方式，offboard模式。而阿木社区具有
 一套较完整，可靠的系统体系。阿木社区的学员们在购买我们的飞机回去
@@ -18,7 +18,7 @@ Firmware（1.8.2），QGroundControl-v3.3.2，交叉编译
 mavlink的二进制安装下，测试通过。首先，先从搭建环境开始讲。
 
 第一节 硬件准备
-=============
+================
 
 笔者刚开学习的时候，用的是虚拟机vmware，但是发现用虚拟机的话，
 不能进行仿真，查阅大量资料之后发现，多数由于Java原因，也有
@@ -34,10 +34,10 @@ mavlink的二进制安装下，测试通过。首先，先从搭建环境开始�
 CPU6核12线程。
 
 第二节 软件配置
-=============
+================
 
 1.Ubuntu16.04操作系统
---------------------
+-----------------------
 
 用UltraISO制作U盘启动盘，步骤如下:
 
@@ -87,7 +87,7 @@ Ubuntu系统的一点设置
 
 
 2.PX4环境安装
-------------
+---------------
 
 参考官方文档 https://dev.px4.io/master/en/setup/dev_env_linux_ubuntu.html 
 笔者在安装完Ubuntu系统的第一件事情就是用户组的添加
@@ -192,7 +192,7 @@ Ubuntu系统的一点设置
 到此为止，说明你的PX4环境配置已经搭建完成了。下来我们会配置与Ubuntu16.04系统对应的ROS Kinetic版本。
 
 3.ROS-Kinetic安装
-----------------
+-------------------
 
 ROS-Kinetic的安装参考 http://wiki.ros.org/kinetic/Installation/Ubuntu 需要注意的一点是，
 一般笔者在安装ROS时候，选择镜像是中科大的源或者是清华的源，其他就是按照官网提示一步步安装即可。
@@ -231,33 +231,33 @@ ROS-Kinetic的安装参考 http://wiki.ros.org/kinetic/Installation/Ubuntu 需�
     started core service [/rosout]
 
 4.mavlink与mavros安装
---------------------
+-----------------------
 
 mavlink与mavros的安装参考 https://github.com/mavlink/mavros/blob/master/mavros/README.md#installation
 
 按照教程安装应该没有什么问题的。
 
 5、下载QGroundControl
---------------------
+-----------------------
 
 笔者的qgc版本是v3.3.2，是通过Qt5.11.0编译生成的。建议直接下载可执行程序，可参考开发者手册
 https://docs.qgroundcontrol.com/en/getting_started/download_and_install.html
 
 
 第三节 仿真过程
-=============
+================
 
 上节中，我们已经搭建好PX4仿真的环境了，而本节旨在下载阿木社区的源码，并且建立新的工作空间到
 个人工作路径下，然后配置仿真所使用的固件版本的选择以及环境配置，最后进行仿真操作。先从如何
 下载阿木社区源码说起
 
 1.打开阿木社区的GitHub
---------------------
+-----------------------
 
 上网进入 https://github.com/amov-lab/px4_command 阿木社区维护的GitHub.
 
 2.下载源码并建立工作区间
----------------------
+------------------------
 
 详细的建立工作空间请查看阿木社区GitHub上的项目 px4_commander.
 或者如下链接：https://github.com/amov-lab/px4_command
@@ -289,7 +289,7 @@ https://docs.qgroundcontrol.com/en/getting_started/download_and_install.html
     source ~/AMOV_WorkSpace/px4_ws/devel/setup.bash
 
 3.添加环境变量 .bashrc 文件添加如下
--------------------------------
+-----------------------------------
 
 ::
 
@@ -298,7 +298,7 @@ https://docs.qgroundcontrol.com/en/getting_started/download_and_install.html
     export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/Desktop/px4-src/src-1.8.2/Firmware/Tools/sitl_gazebo
 
 4.启动仿真
----------
+------------
 
 进入工作区间仿真部分目录下，可以看到有6个脚本文件
 
@@ -318,10 +318,10 @@ https://docs.qgroundcontrol.com/en/getting_started/download_and_install.html
 即可进入仿真界面。
 
 第四节 仿真脚本说明
-================
+===================
 
 1.脚本sitl_gazebo_iris.sh
-------------------------
+---------------------------
 
 正常启动sitl_gazebo_iris.sh腳本，基本操作流程和实体飞机操作流程一致。 先起飞3m,如下图:
 
@@ -344,7 +344,7 @@ https://docs.qgroundcontrol.com/en/getting_started/download_and_install.html
 -   在NE控制率下，正常设置起飞3M，飞机纯粹油门量最大向上直飞，一直飞。
 
 2.脚本sitl_gazebo_square.sh
----------------------------
+------------------------------
 
 正常启动sitl_gazebo_square.sh脚本。确定并初始化px4_pos_controller节点。然后在set_mode节点中切换至offboard模式。检查square节点中，
 按键１执行飞正方形。最后在qgc中解锁飞机，飞机正常按照Point点进行飞行。
@@ -367,6 +367,7 @@ point5:
 .. image:: ../images/square_point5.png
 
 3.脚本sitl_gazebo_formation.sh
+---------------------------------
 
 正常启动sitl_gazebo_formation.sh，在启动正常的情况下（qgc可以连接上三个飞机），此时确认formation_control节点并初始化，
 按照ENU坐标系下，设置坐标点，三架飞机同步执行动作。如下图: 
