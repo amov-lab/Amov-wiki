@@ -45,7 +45,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'px4_command'
+project = u'Amov-wiki'
 copyright = u'2019, AMOV Dev Team'
 author = u'AMOV Dev Team'
 
