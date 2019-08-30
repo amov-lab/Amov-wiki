@@ -11,8 +11,8 @@ Amov-wiki主页
 .. toctree::
    :hidden:
 
-   1.px4_command&Gazebo仿真 <docs/px4_command&Gazebo仿真搭建>
-   2.px4_command&系统总览 <docs/px4_command&项目总览>
+   1.px4_command&系统总览 <docs/px4_command&项目总览>
+   2.px4_command&Gazebo仿真 <docs/px4_command&Gazebo仿真搭建>
    3.px4_command&P200使用说明 <docs/px4_command&P200使用说明>
    4.rtk <docs/rtk>
 
