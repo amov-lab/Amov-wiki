@@ -1,7 +1,7 @@
 .. px4_command主页:
 
 ===============
-Amvo-wiki主页
+Amov-wiki主页
 ===============
 
 .. tip::
