@@ -15,7 +15,7 @@ Amov-wiki主页
    2.px4_command&Gazebo仿真 <docs/px4_command&Gazebo仿真搭建>
    3.px4_command&AirSim仿真 <docs/px4_command&AirSim仿真搭建>
    4.px4_command&P200使用说明 <docs/px4_command&P200使用说明>
-   5.WIFI数传配置无线网卡模式连接路由器 <docs/px4_command&WIFI数传配置>
+   5.px4_command&WIFI数传配置 <docs/px4_command&WIFI数传配置>
    6.双频rtk介绍及其使用说明 <docs/双频rtk介绍及其使用说明>
 
 
