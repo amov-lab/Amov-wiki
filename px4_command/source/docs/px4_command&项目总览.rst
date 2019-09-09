@@ -21,6 +21,39 @@ px4_command功能包是一个基于PX4开源固件及Mavros功能包的开源项
 1 下载编译
 -----------
 
+a 通过二进制的方法安装Mavros功能包
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+请参考:`mavros的github <https://github.com/mavlink/mavros>`_
+
+如果你已经使用源码的方式安装过Mavros功能包,请先将其删除.
+
+b 在home目录下面创建一个名为 **px4_ws** 的工作空间
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    mkdir -p ~/px4_ws/src
+    cd ~/px4_ws/src
+    catkin_init_workspace
+
+大部分时候,需要手动 **source** ,打开一个新终端
+
+::
+
+    gedit .bashrc
+
+在打开的 bashrc.txt 文件中添加 source /home/$(your computer name)/px4_ws/devel/setup.bash
+
+c 下载并编译 **px4_command** 功能包
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    cd ~/px4_ws/src
+    git clone https://github.com/amov-lab/px4_command
+    cd ..
+    catkin_make
 
 
 2 位置估计
