@@ -112,7 +112,7 @@ b PX4参数调整
 
 室内激光雷达定位模式
 
--   EKF2_AID_MASK = 24 （选择位置以及偏航来源） ； EKF2_HGT_MODE = VERSION（选择高度来源）   
+-   EKF2_AID_MASK = 24 （选择位置以及偏航来源） ； EKF2_HGT_MODE = Vision（选择高度来源）   
 -   限制飞机在position模式下的速度以及倾角 ：MPC_TILTMAX_AIR=8、MPC_XY_VEL_MAX=1、MPC_ZVEL_MAX_UP=1
 
 参数确定后尝试解锁，遇到解锁不成功，看看提示是否需要重新校准磁罗盘？解锁成功，电机启转，这时切记不要上浆试飞，
