@@ -81,12 +81,98 @@ c 下载并编译 **px4_command** 功能包
 
 
 
-
 4 室内定位(激光/视觉)
 ----------------------
 
+- 二维激光雷达定位
+- Inter T265双目相机视觉定位
+
+a 二维激光雷达定位
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+.. image:: ../images/rplidar_poscontrol.png
+
+RplidarNode节点主要是驱动二维激光雷达，把扫到的距离信息打包向外发布，cartographer订阅此消息进行运算，解算出飞机的空间位置信息以及航向信息，该信息最终会被px4_pos_estimator订阅进行进一步的运算，其中Google的[Cartographer官网](https://google-cartographer-ros.readthedocs.io/en/latest/)参考。
+
+各个节点对应的工作包或工作空间如下：
+
+- RplidarNode---rplidar_ws
+- Cartographer_node---carto_ws 
+- px4_pos_estimator---px4_command
+
+b Inter_T265双目相机视觉定位
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ T265相机如图所示
+.. image:: ../images/inter_t265.png
+
+.. image:: ../images/T265_pos.png
+Realsense2_camera节点是驱动T265并发布原始图像、imu，深度图像等信息，Realsense2_cameraz_manage订阅这些信息处理解算出飞机的空间位置并发布，T265_to_mavros接收此topic处理，主要是坐标的转换，目的是与我们飞控的坐标系相匹配，然后px4_pos_estimator进行进一步的处理，主要是选择空间位置来源（是激光雷达来的位置信息或vision来的位置信息）。
+
+各个节点对应的工作包如下：
+
+- Realsense2_camera、Realsense2_camera_manage --- realsense-ros [参考于此](https://github.com/IntelRealSense/realsense-ros.git)
+- T265_to_mavros --- vision_to_mavros[参考于此](https://github.com/hoangthien94/vision_to_mavros.git)
+- Px4_pos_estimator --- px4_command
+
+
 5 视觉追踪
 ------------
+# 视觉追踪（单目相机）
+
+以圆形物体检测跟踪为例
+
+- 原理分析
+- 软件流程
+
+ 原理分析
+^^^^^^^^^^^^^^
+
+物体目标坐标系是相对飞机质心的位置，向前为X+、向下Z+、向右Y+;
+飞机的坐标系是相对启动点的位置，向前为X+、向上Z+、向左Y+;
+
+**注：所在观察位置在飞机的机后 。**
+
+假设我们用激光雷达或VIO或GPS以及IMU、测高传感器知道了飞机当前的空间位置 
+$$
+（X_机，Y_机，Z_机）
+$$
+用单目或双目摄像头解算出物体目标相对飞机的当前的空间位置
+$$
+(X_物，Y_物，Z_物)
+$$
+以及当我们给板载计算机输入期望的飞机空间位置时，飞机能够到达指定位置，那么当我们确定期望的物体目标坐标时会发生什么呢？（即物体相对飞机的空间位置不变）假设是：
+$$
+(X_{物期}，Y_{物期}，Z_{物期}) = （1.5，0，0）
+$$
+为了简化问题，我们单独拿出X轴来分析，我们建立一维的示意图，如下图我们已知飞机的坐标，物体的坐标，
+
+那么我们就可以求出
+$$
+X_{机期}+X_{物期}=X_机+X_物
+$$
+
+$$
+得出：X_{机期}=X_机+X_物-X_{物期}
+$$
+
+.. image:: ../images/track_theory.png
+
+那么现在我们知道了所要的飞机的期待坐标，以及现在时刻飞机的坐标，接下来无非就是PID，控制率的问题了。
+
+软件流程
+^^^^^^^^^^^^^^^^
+
+.. image:: ../images/ellipse_det.png
+
+web_cam节点是驱动单目相机并发布原始图像信息，ellipse_det对原始图像进行处理，检测圆形物体并发布此物体相对飞机的位置信息。Target_tracking节点负责根据物体的位置，以及期望位置发布飞机的期望位置给px4_pos_controller，进而通过movros与飞控通信达到控制飞机的到指定点的目的。
+
+各个节点对应的工作包或工作空间如下：
+
+- web_cam --- ros_web_cam
+- ellipse_det --- ellipse_det_ros
+- Target_tracking、px4_pos_controller --- px4_command
+
 
 6 视觉引导降落
 ----------------
