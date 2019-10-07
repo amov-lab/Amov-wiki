@@ -87,8 +87,8 @@ c 下载并编译 **px4_command** 功能包
 - 二维激光雷达定位
 - Inter T265双目相机视觉定位
 
-a 二维激光雷达定位
- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+二维激光雷达定位
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
  
 .. image:: ../images/rplidar_poscontrol.png
 
@@ -100,8 +100,8 @@ RplidarNode节点主要是驱动二维激光雷达，把扫到的距离信息打
 - Cartographer_node---carto_ws 
 - px4_pos_estimator---px4_command
 
-b Inter_T265双目相机视觉定位
- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Inter_T265双目相机视觉定位
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
  T265相机如图所示
 .. image:: ../images/inter_t265.png
@@ -116,16 +116,15 @@ Realsense2_camera节点是驱动T265并发布原始图像、imu，深度图像�
 - Px4_pos_estimator --- px4_command
 
 
-5 视觉追踪
+5 视觉追踪（单目相机）
 ------------
-# 视觉追踪（单目相机）
 
 以圆形物体检测跟踪为例
 
 - 原理分析
 - 软件流程
 
- 原理分析
+原理分析
 ^^^^^^^^^^^^^^
 
 物体目标坐标系是相对飞机质心的位置，向前为X+、向下Z+、向右Y+;
@@ -176,6 +175,52 @@ web_cam节点是驱动单目相机并发布原始图像信息，ellipse_det对�
 
 6 视觉引导降落
 ----------------
+
+- ArUco Marker检测
+
+- 降落板引导降落软件流程
+
+ArUco Marker检测
+^^^^^^^^^^^^^^^^^^^^
+Marker的坐标系定义为：
+垂直于Marker向外为x轴正方向，水平向左为y轴正方向，竖直向下为z轴正方向,Marker中心为坐标系原点。 
+
+以10号字典(6X6 250)中id为3的Marker做示意： 
+
+.. image:: ../images/aruco_marker.png
+
+
+识别由九个ArUco Marker组成的降落板，并解算无人机相对于降落板的位置。
+降落板的坐标系定义为：
+垂直于降落板向上为z轴正方向，水平向右为x轴正方向，水平向前为y轴正方向,降落板中心为坐标系原点。 
+
+.. image:: ../images/aruco_marker_lad.png
+
+
+将降落板图片按照60cmX60cm打印出来。
+在摆放时需要将降落板的x轴正方向（即向右的方向）与无人机机头朝向一致。 
+
+降落板引导降落软件流程
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: ../images/aruco_marker_lad1.png
+
+
+其中landpad_det是用来识别由九个ArUco Marker组成的降落板，并解算无人机相对于降落板的位置。
+
+发布降落板与无人机的相对位置以及降落板与无人机的相对偏航角，然后autonomous_landing定义这些topic进行处理并发布控制指令，控制无人机降落。
+
+各个节点对应的工作包或工作空间如下：
+
+- landpad_det --- landpad_det_ros
+- autonomous_landing、px4_pos_controller --- px4_command
+
+备注：
+
+在运行主节点的情况下输入roslaunch landpad_det landpad_det.launch 运行节点
+
+通过输入命令 rqt_image_view 可查看可视化检测结果
+选择/camera/rgb/image_landpad_det话题 
 
 7 深度学习追踪
 ----------------
