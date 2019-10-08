@@ -103,7 +103,7 @@ GPS在室外可以进行多传感器融合,最后给到飞控内部,得到本地
  
 .. image:: ../images/rplidar_poscontrol.png
 
-RplidarNode节点主要是驱动二维激光雷达，把扫到的距离信息打包向外发布，cartographer订阅此消息进行运算，解算出飞机的空间位置信息以及航向信息，该信息最终会被px4_pos_estimator订阅进行进一步的运算，其中Google的[Cartographer官网](https://google-cartographer-ros.readthedocs.io/en/latest/)参考。
+RplidarNode节点主要是驱动二维激光雷达，把扫到的距离信息打包向外发布，cartographer订阅此消息进行运算，解算出飞机的空间位置信息以及航向信息，该信息最终会被px4_pos_estimator订阅进行进一步的运算，其中Google的 `Cartographer官网 <https://google-cartographer-ros.readthedocs.io/en/latest/>`_ 参考。
 
 各个节点对应的工作包或工作空间如下：
 
@@ -115,20 +115,22 @@ Inter_T265双目相机视觉定位
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
  T265相机如图所示
+
 .. image:: ../images/inter_t265.png
 
 .. image:: ../images/T265_pos.png
+
 Realsense2_camera节点是驱动T265并发布原始图像、imu，深度图像等信息，Realsense2_cameraz_manage订阅这些信息处理解算出飞机的空间位置并发布，T265_to_mavros接收此topic处理，主要是坐标的转换，目的是与我们飞控的坐标系相匹配，然后px4_pos_estimator进行进一步的处理，主要是选择空间位置来源（是激光雷达来的位置信息或vision来的位置信息）。
 
 各个节点对应的工作包如下：
 
-- Realsense2_camera、Realsense2_camera_manage --- realsense-ros [参考于此](https://github.com/IntelRealSense/realsense-ros.git)
-- T265_to_mavros --- vision_to_mavros[参考于此](https://github.com/hoangthien94/vision_to_mavros.git)
+- Realsense2_camera、Realsense2_camera_manage --- realsense-ros `Realsense驱动ros包 <https://github.com/IntelRealSense/realsense-ros.git>`_
+- T265_to_mavros --- vision_to_mavros `T265_to_mavros <https://github.com/hoangthien94/vision_to_mavros.git>`_
 - Px4_pos_estimator --- px4_command
 
 
 5 视觉追踪（单目相机）
-------------
+----------------------------
 
 以圆形物体检测跟踪为例
 
