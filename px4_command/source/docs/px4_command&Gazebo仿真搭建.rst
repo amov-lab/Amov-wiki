@@ -5,33 +5,23 @@ px4_command&Gazebo仿真搭建
 =============================
 
 PX4提供了一种全自主飞行控制方式，offboard模式。而阿木社区具有
-一套较完整，可靠的系统体系。阿木社区的学员们在购买我们的飞机回去
-之后发现对我们的系统体系还不是很了解，导致操作不当还是会有很多
-炸机现象，为了让学员们更加了解系统体系的种种情况，于是乎出现了
-仿真系统平台下对阿木系统体系的模拟。有了这一套仿真系统，学员
-可以更加理解阿木系统体系中的逻辑，熟悉这一套系统体系，结合仿真
-减少实际飞行中炸机的发生。 本篇文章中，会讲解如何用模拟器来
-按照我们的系统体系控制无人机飞行。本套仿真平台在
-Ubuntu16.04（16.04.6）LTS，ROS-Kinetic（v1.12.14），py
+一套完整，可靠的系统体系。阿木社区的学员们在购买我们的飞机回去
+之后发现对我们的系统体系还不是了解，导致操作不当还是会有很多
+炸机现象，为了让学员们更加了解系统体系的种种情况，现推出仿真环境平台,
+对阿木系统体系的仿真模拟。有了这一套仿真系统，可以在不用实际飞行情况下理解阿木系统体系中的逻辑，
+减少实际飞行中炸机的发生。 本篇文章中，会讲解如何使用系统体系控制无人机飞行。本套仿真平台在
+Ubuntu16.04（16.04.6）LTS，ROS-Kinetic（1.12.14），
 Firmware（1.8.2），QGroundControl-v3.3.2，交叉编译
 工具链为gcc-arm-none-eabi-5_4-2016q2，mavros以及
-mavlink的二进制安装下，测试通过。首先，先从搭建环境开始讲。
+mavlink的二进制安装下，测试通过。先从搭建环境开始讲起吧。
 
 第一节 硬件准备
 ================
 
-笔者刚开学习的时候，用的是虚拟机vmware，但是发现用虚拟机的话，
-不能进行仿真，查阅大量资料之后发现，多数由于Java原因，也有
-显卡问题。我们都知道，vm里面是虚拟显卡，而且安装Ubuntu本身
-自带的nouveau显卡性能本身就不行，满足不了仿真的需求。 
-笔者的第一个台式电脑是学校标配的电脑，显卡记得好像是630还是
-730来着，在种种环境安装配置好之后，正常的mavros，gazebo
-仿真没有很多问题，但是如果要做视觉导航部分的仿真，比较吃力。
-笔者现在电脑的配置为GTX2060，AMD Ryzen 5 3600 6-Core Processor × 12，
-16G的内存。目前笔者还没有尝试视觉导航部分的仿真，但这么高的配置，
-应是没有什么问题。 再次建议各位，尽量用一台比较高配的台式电脑，
-显示器数量个人看个人情况。笔者建议显卡至少GTX1060，内存大小16G，
-CPU6核12线程。
+本套仿真环境既可以在Windows下面的VMware下面搭建,也可以在实体机上面搭建.Windows虚拟机VMware下面我们提供搭建好了的开发环境,
+包括PX4开发环境,mavros环境,ROS环境.但是,需要注意,虚拟机上运行会很卡,如果有显卡的话,打开3D加速,不是很卡顿.
+
+本篇文章是在实体机上搭建环境的,电脑配置如下:显卡NVIDIA GTX2060;CPU为AMD Ryzen 5 3600 6-Core Processor × 12,内存大小为16G,256固态硬盘
 
 第二节 软件配置
 ================
@@ -42,12 +32,11 @@ CPU6核12线程。
 用UltraISO制作U盘启动盘，步骤如下:
 
 -   打开UltraISO软件，打开文件，选择要安装的Ubuntu版本，
-    笔者安装的是Ubuntu-16.04.6，偶数版本的都是长期支持版的系
-    统镜像，至少到2021年之前是一直被维护的。
+    安装的镜像是Ubuntu-16.04.6，偶数版本表示长期(5年)维护的系
+    统镜像，在2021年之前是支持的。
 -   接着我们点击启动->写入磁盘映像，进入下面的界面，在制作
-    Ubuntu的U盘启动盘的时候，要选择RAW。笔者之前也尝试过其他
-    的写入方式，有时候会成功，有时候会失败。但自从选择了RAW
-    之后，装的好几次都是成功了的，所以笔者建议用RAW写入方式。   
+    Ubuntu的U盘启动盘的时候，要选择RAW。之前也尝试过其他
+    的写入方式，偶尔会成功，偶尔会失败。但选择RAW之后，装的好几次都是成功了的，所以建议用RAW写入方式。   
 -   之后就是把U盘格式化，然后点击写入即可，
     等待......（长短取决于电脑性能），待完成之后U盘启动盘就
     制作成功了。
@@ -56,32 +45,30 @@ CPU6核12线程。
 
     插上U盘，开机启动选项中设置U盘启动即可，一般不同的电脑进
     入BIOS的方式不同。之后的安装很简单，百度上有很多教程，
-    按照教程安装即可完成安装。笔者直接安装的是Ubuntu系统，
+    按照教程安装即可完成安装。本次安装是一块新的256固态硬盘,全盘直接安装的是Ubuntu系统，
     所以没有什么分区设置。
 
-Ubuntu系统的一点设置
+Ubuntu系统的技巧设置
 
--   笔者在装完Ubuntu后发现分辨率很低，看的很难受。查看了一下，
+-   技巧一 刚装完Ubuntu后发现分辨率很低，屏幕看起来很别扭。查看了一下，
     分辨率只有640x480，然而我的屏幕是1920x1080的。然后通过改
-    xrandr和cvt都无效。最后笔者找到解决方案，修改grub默认的
+    xrandr和cvt都无效。经过一番查找,找到解决方案，修改grub默认的
     分辨率，具体过程如下： sudo gedit /etc/default/grub 
     找到: #GRUB_GDXMODE=640x480 改为: 
     GRUB_GDXMODE=1920x1080 然后更新一下grub: 
     sudo update-grub 最后重启电脑即可
--   笔者还建议在安装完系统之后，只留下现在所使用的版本的内核，
+-   技巧二 建议在安装完系统之后，只留下现在所使用的版本的内核，
     删除其余多余的内核，并且禁用内核的更新，否则过段时间，
-    系统默认启动更新后的内核。
+    系统默认启动更新后的内核。(具体的如何禁用设置上网一搜索便可找到)
 -   安装显卡驱动，Ubuntu默认的显卡驱动是nouveau，你需要安装
     与你显卡相匹配的驱动程序。以NVIDIA驱动为例，首先是查看自己
-    显卡，发现是设备ID为1f08，通过 
-    https://devicehunt.com/view/type/pci/vendor/10DE/device/1F08 
-    搜索发现该驱动是GTX2060，然后我们到
-    https://www.nvidia.com/Download/index.aspx?lang=cn 
-    下载相应的驱动安装程序。安装的过程你可以参考这篇文档
-    https://zhuanlan.zhihu.com/p/31575356
+    显卡，发现是设备ID为1f08，通过 `NVIDIA驱动ID查看 <https://devicehunt.com/view/type/pci/vendor/10DE/device/1F08>`_
+    搜索发现该驱动是GTX2060，然后我们到 `NVIDIA驱动程序下载 <https://www.nvidia.com/Download/index.aspx?lang=cn>`_ 下载相应的驱动
+    下载相应的驱动安装程序。安装的过程你可以参考这篇文档 `NVIDIA驱动安装 <https://zhuanlan.zhihu.com/p/31575356>`_ 
 
 ::
 
+    如下命令就是查看自己电脑当前可用的显卡,获取到NVIDIA显卡的设备ID
     amov@amov:~$ lspci | grep VGA
     0a:00.0 VGA compatible controller: NVIDIA Corporation Device 1f08 (rev a1)
 
@@ -89,14 +76,16 @@ Ubuntu系统的一点设置
 2.PX4环境安装
 ---------------
 
-参考官方文档 https://dev.px4.io/master/en/setup/dev_env_linux_ubuntu.html 
-笔者在安装完Ubuntu系统的第一件事情就是用户组的添加
+参考官方文档 `Ubuntu下px4开发环境搭建 <https://dev.px4.io/master/en/setup/dev_env_linux_ubuntu.html>`_  .
+该文档链接是在当时环境下的master文档,对应的是1.8.2的wiki文档
+
+在安装完Ubuntu系统的第一件事情就是用户组的添加
 
 ::
 
     sudo usermod -a -G dialout $USER
 
-然后按照官网教程，~/下新建一个文件，重命名为ubuntu_sim.sh。在官网打开ubuntu_sim.sh脚本，
+然后按照官网教程，在~/下新建一个文件，重命名为ubuntu_sim.sh。在官网打开ubuntu_sim.sh脚本，
 全部复制拷贝到新建的脚本中，接着给脚本可执行权限。最后执行这个脚本。
 
 ::
@@ -106,8 +95,8 @@ Ubuntu系统的一点设置
     sudo ./ubuntu_sim.sh
 
 这个安装的快慢与你的网速有关。这个脚本本身是没有安装交叉编译工具链的。交叉编译工具链需要手动安装，
-接下来是手动安装交叉编译工具链： 通过 https://bigsearcher.com/mirrors/gcc/releases/ 
-下载你所需要的gcc版本。 下载之后解压并放到/opt/之下，如下所示为笔者gcc的路径
+接下来是手动安装交叉编译工具链： `交叉编译工具镜像下载 <https://bigsearcher.com/mirrors/gcc/releases/>`_ 
+下载你所需要的gcc版本。 下载之后解压并放到/opt/之下，下图所示本机的gcc的路径
 
 ::
 
@@ -155,7 +144,7 @@ Ubuntu系统的一点设置
     arm-none-eabi-gcc --version
     arm-none-eabi-gcc: No such file or directory
 
-需要安装32位支持库（ https://px4.osdrone.net/1_Getting-Started/adcanced_linux.html）
+需要安装32位支持库 `此链接查看详细步骤 <https://px4.osdrone.net/1_Getting-Started/adcanced_linux.html>`_
 
 ::
 
@@ -170,18 +159,19 @@ Ubuntu系统的一点设置
     Cloning into 'Firmware'...
     remote: Enumerating objects: 278734, done.
 
-下载完之后，我们进入到Firmware中，还需要更新子模块
+下载完之后，我们进入到Firmware中，下载的还需要更新子模块
 
 ::
 
     amov@amov:~/Desktop/px4-src/src-1.8.2$ cd Firmware/
+    amov@amov:~/Desktop/px4-src/src-1.8.2/Firmware$ git checkout v1.8.2
     amov@amov:~/Desktop/px4-src/src-1.8.2/Firmware$ git submodule update --init --recursive
 
-漫长等待之后，你就可以编译源码了，先试试最基本的能力。 首先是编译源代码
+漫长等待之后，就可以编译源码了，先试试最基本的能力。 首先是编译源代码
 
 ::
 
-    amov@amov:~/Desktop/px4-src/src-1.8.2/Firmware$ make px4_fmu-v5_default
+    amov@amov:~/Desktop/px4-src/src-1.8.2/Firmware$ make px4fmu-v5_default
 
 若编译成功的话，再执行编译最基本的gazebo仿真
 
@@ -191,15 +181,23 @@ Ubuntu系统的一点设置
 
 到此为止，说明你的PX4环境配置已经搭建完成了。下来我们会配置与Ubuntu16.04系统对应的ROS Kinetic版本。
 
+.. tip::
+
+    在px4固件代码v1.8.2之前的编译规则和v1.8.2之后的编译规则略有不同,
+
+    v1.8.2中编译v5固件命令为 make px4fmu-v5_default.v1.9.2中编译v5固件命令为 make px4_fmu-v5_default
+
+    v1.8.2中编译gazebo仿真命令为 make posix_sitl_default gazebo . v1.9.2中编译gazebo仿真命令为 make px4_sitl_default gazebo
+
 3.ROS-Kinetic安装
 -------------------
 
-ROS-Kinetic的安装参考 http://wiki.ros.org/kinetic/Installation/Ubuntu 需要注意的一点是，
-一般笔者在安装ROS时候，选择镜像是中科大的源或者是清华的源，其他就是按照官网提示一步步安装即可。
+ROS-Kinetic的安装参考 `ROS-Kinetic官网安装教程 <http://wiki.ros.org/kinetic/Installation/Ubuntu>`_ 需要注意的一点是，
+在安装ROS时候，国内最好选择镜像来自中科大的源或者是清华的源，其他就是按照官网提示一步步安装即可。
 
 .. tip::
 
-    安装ROS（大概有700~800MB）完成之后，查看是否安装成功，如下表示安装ROS完成。
+    安装ROS（有700MB到800MB）完成之后，查看是否安装成功，如下表示安装ROS完成。
 
 ::
 
@@ -233,15 +231,15 @@ ROS-Kinetic的安装参考 http://wiki.ros.org/kinetic/Installation/Ubuntu 需�
 4.mavlink与mavros安装
 -----------------------
 
-mavlink与mavros的安装参考 https://github.com/mavlink/mavros/blob/master/mavros/README.md#installation
+mavlink与mavros的安装参考 `mavros官方安装 <https://github.com/mavlink/mavros/blob/master/mavros/README.md#installation>`_
 
-按照教程安装应该没有什么问题的。
+最好最清晰的安装过程便是官方提供的步骤,以安装二进制源码的方式安装mavros,切记按照提示一步一步完成,
 
 5、下载QGroundControl
 -----------------------
 
-笔者的qgc版本是v3.3.2，是通过Qt5.11.0编译生成的。建议直接下载可执行程序，可参考开发者手册
-https://docs.qgroundcontrol.com/en/getting_started/download_and_install.html
+本系统的qgc版本是v3.3.2，是通过Qt5.11.0编译生成的。建议直接下载可执行程序，可参考开发者手册
+`QGC下载与安装 <https://docs.qgroundcontrol.com/en/getting_started/download_and_install.html>`_
 
 
 第三节 仿真过程
@@ -254,13 +252,13 @@ https://docs.qgroundcontrol.com/en/getting_started/download_and_install.html
 1.打开阿木社区的GitHub
 -----------------------
 
-上网进入 https://github.com/amov-lab/px4_command 阿木社区维护的GitHub.
+上网进入 `amovlab <https://github.com/amov-lab>`_ 阿木实验室维护的GitHub.
 
 2.下载源码并建立工作区间
 ------------------------
 
 详细的建立工作空间请查看阿木社区GitHub上的项目 px4_commander.
-或者如下链接：https://github.com/amov-lab/px4_command
+或者如下链接：`px4_command <https://github.com/amov-lab/px4_command>`_
 
 建立好工作空间之后，笔者的工作空间如下：
 
@@ -346,6 +344,18 @@ https://docs.qgroundcontrol.com/en/getting_started/download_and_install.html
 2.脚本sitl_gazebo_square.sh
 ------------------------------
 
+.. note::
+
+    直接下载的px4_command是没有sitl_gazebo_square.sh该脚本的,需要手动添加该脚本.首先可以建立一个新的可执行脚本sitl_gazebo_square.sh,添加下面内容:
+
+    |   gnome-terminal --window -e 'bash -c "roscore; exec bash"' \
+    |   --tab -e 'bash -c "sleep 4; roslaunch px4 posix_sitl.launch; exec bash"' \
+    |   --tab -e 'bash -c "sleep 2; roslaunch mavros px4.launch fcu_url:="udp://:14540@127.0.0.1:14557"; exec bash"' \
+    |   --tab -e 'bash -c "sleep 2; roslaunch px4_command px4_pos_controller.launch; exec bash"' \
+    |   --tab -e 'bash -c "sleep 2; rosrun px4_command set_mode; exec bash"' \
+    |   --tab -e 'bash -c "sleep 2; roslaunch px4_command square.launch; exec bash"' \
+
+
 正常启动sitl_gazebo_square.sh脚本。确定并初始化px4_pos_controller节点。然后在set_mode节点中切换至offboard模式。检查square节点中，
 按键１执行飞正方形。最后在qgc中解锁飞机，飞机正常按照Point点进行飞行。
 
@@ -368,6 +378,10 @@ point5:
 
 3.脚本sitl_gazebo_formation.sh
 ---------------------------------
+
+下载下来的px4_command也可能不能直接进行多机仿真,在自己本机下面的固件代码中的launch文件需要改一下名称,可能没有three_uav_mavros_sitl.launch.
+需要将现有的multi_uav_mavros_sitl.launch改为three_uav_mavros_sitl.launch . 运行仿真之后可能只出现两架飞机,原因是,在px4_command中的多机仿真用的是uav0,uav1,uav2,
+而在你下载的固件代码中只有uav1,uav2.没有uav0,这时候你需要手动添加一个uav0出来,才能多机(3架飞机)仿真跑起来.
 
 正常启动sitl_gazebo_formation.sh，在启动正常的情况下（qgc可以连接上三个飞机），此时确认formation_control节点并初始化，
 按照ENU坐标系下，设置坐标点，三架飞机同步执行动作。如下图: 

@@ -62,9 +62,9 @@ b UE4环境
 2 PX4环境
 -----------
 
-px4的环境在之前有讲过,笔者安装的顺序也是先安装完成了gazebo那篇的仿真环境搭建,之后才开始安装airsim.
+px4的环境在之前有讲过,安装的顺序也是先安装完成了gazebo那篇的仿真环境搭建,之后才开始安装airsim.
 
-在完成px4环境之后,进入px4原生固件准备编译,笔者的路径如下:
+在完成px4环境之后,进入px4原生固件准备编译,本机下的路径:
 
 .. image:: ../images/Airsim_build_Firmware_path.png
 
@@ -78,7 +78,7 @@ px4的环境在之前有讲过,笔者安装的顺序也是先安装完成了gaze
 
 .. note::
 
-    笔者之前编译过,所以这次编译会直接出现结果,没有编译过程
+    之前已经编译过,所以这次编译会直接出现结果,没有编译过程
 
 3 mavros安装
 --------------
@@ -163,7 +163,7 @@ a 进入到PX4/Firmware目录下,编译
 b 控制飞行
 ^^^^^^^^^^^^
 
-进入我们的px4_command/sh/sh_for_simulation目录下
+进入px4_command/sh/sh_for_simulation目录下
 
 .. image:: ../images/Airsim_add_startup_bash.png
 
