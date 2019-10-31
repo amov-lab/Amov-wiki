@@ -77,7 +77,10 @@ Ubuntu系统的技巧设置
 ---------------
 
 参考官方文档 `Ubuntu下px4开发环境搭建 <https://dev.px4.io/master/en/setup/dev_env_linux_ubuntu.html>`_  .
-该文档链接是在当时环境下的master文档,对应的是1.8.2的wiki文档
+
+.. warning::
+
+    该文档链接是在当时环境下的master文档,对应的是1.8.2的wiki文档,你现在所在的master页面是最新的wiki文档,你需要在左上角由master切换到1.8.2
 
 在安装完Ubuntu系统的第一件事情就是用户组的添加
 
@@ -85,7 +88,7 @@ Ubuntu系统的技巧设置
 
     sudo usermod -a -G dialout $USER
 
-然后按照官网教程，在~/下新建一个文件，重命名为ubuntu_sim.sh。在官网打开ubuntu_sim.sh脚本，
+然后按照官网教程，在~/下新建一个文件，重命名为ubuntu_sim.sh。在官网打开ubuntu_sim.sh脚本(打开不了说明你的网络不太好)，
 全部复制拷贝到新建的脚本中，接着给脚本可执行权限。最后执行这个脚本。
 
 ::

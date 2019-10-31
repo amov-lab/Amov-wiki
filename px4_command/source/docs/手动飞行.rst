@@ -4,6 +4,10 @@
 手动飞行
 ========
 
+.. warning::
+
+    本实验室出厂的飞机都是校准正确的,如果您拿到的是到手的飞机,可以略过前三点.
+
 1.前提准备
 ==========
 
@@ -17,11 +21,43 @@ QGC是个可以烧写固件,配置和校准的飞控地面站应用软件.
 b.固件的下载
 ---------------
 
-固件的下载有v2和v5版本的,github上的px4_command中firmware中有我们提供的两种固件.直接下载就可以烧写了.
+固件的下载有v2和v5版本的,github上的px4_command中firmware中有我们提供的两种固件.
 
-c.遥控器接收机使用
-------------------
+.. image:: ../images/Setup/download_firmware.png
 
+直接下载到本地就可以烧写了.
+
+.. image:: ../images/Setup/firmware_local.png
+
+c.遥控器与接收机使用
+---------------------
+..
+ .. image:: ../images/test_dongtai.gif
+
+遥控器使用左手油门,两个摇杆均回中.使用了遥控器6个通道,5通道设置为SWC三段开关用来控制飞行模式,飞行模式分别为自稳模式(stabilized),定点模式(position)和降落模式(land).
+6通道设置为SWD两段开关用来激活/关闭offboard模式.接下来,将介绍富斯I6S该款遥控器常用的配置流程.
+
+在未对频时,遥控器开机之后如下图所示,没有RX.表示该遥控器还未与接受机对频.
+
+.. image:: ../images/Setup/rc_0.jpeg
+
+.. image:: ../images/Setup/rc_1.jpeg
+
+.. image:: ../images/Setup/rc_2.jpeg
+
+.. image:: ../images/Setup/rc_3.jpeg
+
+.. image:: ../images/Setup/rc_4.jpeg
+
+.. image:: ../images/Setup/rc_5.jpeg
+
+.. image:: ../images/Setup/rc_6.jpeg
+
+.. image:: ../images/Setup/rc_7.jpeg
+
+.. image:: ../images/Setup/rc_8.jpeg
+
+.. image:: ../images/Setup/rc_9.jpeg
 
 
 2.地面站设置
@@ -43,11 +79,15 @@ a.固件烧写
 
 在这里,我们使用提供的固件:
 
+.. image:: ../images/Setup/firmware_upload_customize.png
+
 -   点击高级设置
 -   选择我们下载好的固件文件(v2或者v5)
 -   选择OK烧写固件
 
 如果要用官网最新的固件,直接点击OK就行.等待烧写完成.
+
+.. image:: ../images/Setup/firmware_upload_completed.png
 
 b.机型选择
 -----------------
@@ -71,6 +111,8 @@ c.传感器校准
 -   共有六个面需要校准,分别为前后左右上下,红色轮廓表示未校准该面,黄色表示该面正在校准,绿色表示该面已校准,将无人机以红色轮廓标记的任意方向放置,等待轮廓变为黄色
 -   根据需要旋转无人机,直到轮廓变成绿色.对每个面都这样做.
 
+.. image:: ../images/Setup/compass_calibration.png
+
 文章参考至 PX4 QGC用户手册 https://docs.qgroundcontrol.com/en/SetupView/sensors_px4.html
 
 **陀螺仪校准**:
@@ -79,6 +121,8 @@ c.传感器校准
 -   无人机放置与水平面上(正常放在地面站即可,如果追求极致,可以用水平仪放在无人机调节至水平)
 -   点击 OK 继续
 -   等待校准进度条完成
+
+.. image:: ../images/Setup/gyro_calibration.png
 
 .. warning::
 
@@ -95,6 +139,8 @@ c.传感器校准
 -   共有六个面需要校准,分别为前后左右上下,红色轮廓表示未校准该面,黄色表示该面正在校准,绿色表示该面已校准,将无人机以红色轮廓标记的任意方向放置,等待轮廓变为黄色
 -   保持无人机在该方向不动,知道轮廓变为绿色,对每个面都这样做.
 
+.. image:: ../images/Setup/accelerometer_calibration.png
+
 文章参考至 PX4 QGC用户手册 https://docs.qgroundcontrol.com/en/SetupView/sensors_px4.html
 
 **水平校准**:
@@ -105,7 +151,13 @@ c.传感器校准
 -   点击 OK 继续
 -   等待校准完成
 
+.. image:: ../images/Setup/level_horizon_calibration.png
+
 文章参考至 PX4 QGC用户手册 https://docs.qgroundcontrol.com/en/SetupView/sensors_px4.html
+
+所有传感器校准完成:
+
+.. image:: ../images/Setup/sensor_calibration_complete.png
 
 d.遥控器校准
 --------------
@@ -177,6 +229,7 @@ f.电源设置
 -   4.等待校准完成
 
 文章参考至 PX4 QGC用户手册 https://docs.qgroundcontrol.com/en/SetupView/Power.html
+
 
 3.PX4入门
 =========
