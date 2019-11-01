@@ -11,9 +11,17 @@
 
 P200是科研无人机开发平台,它由流行的开源组件以及与之配合使用的必要文档和库组成.
 
-该套件包括有PX4组件包的飞控pixhawk硬件平台,作为板载计算机的NVIDIA TX2,用于视觉导航的相机,以及一系列其他的外部传感器.
+该套件包括有PX4组件包的飞控pixhawk硬件平台,作为板载计算机的NVIDIA TX2/Nano,用于视觉导航的相机,以及一系列其他的外部传感器.
 
-P200科研无人机平台包含了基于NVIDIA TX2板载计算机对飞控的mavros逻辑控制程序,改程序的源代码是开放的,可以在 `Github <https://github.com/amov-lab/px4_command>`__ 上获得,
+.. image:: ../images/nvidia_tx2.jpg
+
+更多tx2的性能信息请移步 `淘宝tx2 <https://item.taobao.com/item.htm?spm=a230r.1.14.142.740d3d8dESdsgz&id=606200196150&ns=1&abbucket=13#detail>`__
+
+.. image:: ../images/nvidia_nano.jpg
+
+更多Nano的性能信息请移步 `淘宝Nano <https://item.taobao.com/item.htm?spm=a230r.1.14.37.740d3d8dESdsgz&id=604117310426&ns=1&abbucket=13#detail>`__
+
+P200科研无人机平台包含了基于NVIDIA TX2/Nano板载计算机对飞控的mavros逻辑控制程序,改程序的源代码是开放的,可以在 `Github <https://github.com/amov-lab/px4_command>`__ 上获得,
 如果有疑惑,有问题的欢迎提 **issue** .
 
 如果在文档教程中没有解决你想要的答案,加入我们研发者维护的平台,我们开发者很乐意为您解答: `amov社区论坛! <http://bbs.amovauto.com/>`__
