@@ -1,0 +1,192 @@
+.. T265飞机使用手册:
+
+=====================
+T265飞机使用手册
+=====================
+
+
+TX2系列飞机使用
+==================
+
+.. tip::
+
+    飞机说明:本教程飞机配置为TX2+T265+D435I+pixhawk4
+
+
+飞机整机图:
+
+
+.. image:: ../images/T265_User_Guide/TX2_series/vehicle.jpg
+
+
+飞机上面贴有标签,WIFI数传名字为amov-uav76.密码为amov19076.
+
+开箱第一步,WIFI数传连接QGC
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+首先拿到飞机之后,上电,打开自己电脑WIFI,选择WIFI名为amov-uav76,并输入密码进行连接.(截图WIFI的连接图片)
+
+.. image:: ../images/T265_User_Guide/TX2_series/connect_to_qgc/search_for_wifi.jpg
+
+然后打开一个终端,ping一下WIFI数传的IP,192.168.10.76.(截图为WIFI数传配置成功的图片)
+
+.. image:: ../images/T265_User_Guide/TX2_series/connect_to_qgc/ping_success.jpg
+
+发现已经ping成功了,说明我们可以连接到QGroundControl地面站上面了.
+
+接着,打开QGC,第一步是打开 应用程序设置 菜单栏;第二步是选择 通讯连接 侧边栏;下面会出现五个可修改功能按钮,分别为删除,编辑,添加,连接,断开连接.第三步是点击 添加 按钮.(此处图片为qgc的连接1~3)
+
+.. image:: ../images/T265_User_Guide/TX2_series/connect_to_qgc/add_new_connect.jpg
+
+第四步是在类型旁边将原有的类型serial重选为TCP.(此处图片为第四步)
+
+.. image:: ../images/T265_User_Guide/TX2_series/connect_to_qgc/serial_seclect_tcp.jpg
+
+选择TCP类型之后,下面的输入框有所变化,主机地址就填写为192.168.10.76;端口号填写为6000,接着点击确认即可.(此处照片5~7)
+
+.. image:: ../images/T265_User_Guide/TX2_series/connect_to_qgc/write_vehicle_ip.jpg
+
+第八步是选中刚才添加的通讯连接,第九步点击下面的连接按钮,进行连接到QGC.(此处照片为8~9)
+
+.. image:: ../images/T265_User_Guide/TX2_series/connect_to_qgc/connect_to_qgc.jpg
+
+第十步就可以看到WIFI数传连接成功,地面站上显示飞控的各个信息.(此处照片为10)
+
+.. image:: ../images/T265_User_Guide/TX2_series/connect_to_qgc/wifi_connect_success.jpg
+
+开箱第二步,远程namachine连接
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+开箱第三步,执行脚本
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/nomachine_connect_tx2.jpg
+
+现在已经连接上了nomachine,第一步就是打开目录,进入到amov_ws/src/px4_command/sh/sh_for_P200/vio目录下面,待会准备启动的脚本为vio_fly.sh.(图片)
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/open_script_directory.jpg
+
+然后进行第二步,鼠标右击空白处选择打开一个终端(图片)
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/open_termial.jpg
+
+第三步输入启动脚本的执行指令 ./vio_fly.sh
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/startup_rplidar_fly.jpg
+
+第四步,启动脚本完成之后,自动开启脚本终端.第一个终端为 roscore 此处不做详解.查看mavros脚本是否正常启动,如果红圈内容说明mavros正常与飞控已经建立了通信连接.
+(如果出现报错的话,请仔细查看报错的内容原因是什么,坐标系相关的报错是正常的,不影响我们飞行使用).图片
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/mavros.jpg
+
+第五步,该脚本是T265驱动启动脚本,该脚本正常运行,说明T265已经正常启动.
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/t265_driver.jpg
+
+第六步,是T265的处理脚本,不是异常错误就是正常的,此脚本角T265的位置信息提供给了位置估计节点,以用作位置估计定位
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/t265_data_processing.jpg
+
+第七步,位置估计脚本,此处有多处打印消息,包含视觉信息,飞控信息,两者的各个数据基本保持动态波动就是正常的,波动很大就是非正常现象.如下图所示为正常.
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/estimator.jpg
+
+第八步,是位置控制节点,按照提示输入1继续,它是位置环参数的初始化.如果此处不输入1继续的话,你可以在室内进行定位飞行,但是不能切换到offboard模式.
+只有输入了1,确认位置环参数之后,才能进入offboard模式.
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/position_controller.jpg
+
+第九步,为move节点,正常启动.他可以控制飞机前后左右,位置速度控制飞行.
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/move.jpg
+
+此时你也可以用另外一台电脑连接到飞控中去,按照开箱第一步的教程执行.上面脚本如果都能正常运行的话,此时在遥控器上的5通道(三段)拨到中间,
+将飞行模式改为定点模式,在地面站QGC上面可以看到是可以切到定点飞行模式的,这就说明,此时可以在室内进行定点飞行了.
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/vehicle_state_from_qgc.jpg
+
+ 
+Nano系列飞机使用
+================
+
+.. tip::
+
+    飞机说明:本教程飞机配置为Nano+双目T265+A1+pixhawk4
+
+飞机整体图:
+
+.. image:: ../images/T265_User_Guide/Nano_series/vehicle.jpg
+
+飞机上面有标签,写的是有关WIFI数传的默认配置.例如本架飞机,我们出厂默认的WIFI数传配置为AP模式(数传是个热点,地面站连接热点).
+
+上电之后热点名称就为:amov-uav77,热点密码为:amov19077,电脑连接上WIFI
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/first_connect_wifi.jpg
+
+这时候你就可以在你连接热点的电脑打开终端(Windows下面Ctrl+r,输入cmd进入终端,Ubuntu下面直接右击鼠标打开termial),
+使用ping命令看是否能ping通热点.热点的IP为192.168.10.77.直接输入ping 192.168.10.77.
+如果ping通,说明就正常可以使用了.如果ping不通,那就是WIFI数传没有配置正确.可以看到是ping失败了,WIFI没有配置成功,你需要自己重新手动配置一下
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/ping_failure.jpg
+
+首先需要准备的东西有,配置软件RM08K config tool CN V2.1,和WIFI数传配置线以及工具刀(有的WiFi数传的复位按钮地方在里面,可能需要镊子或者较细的工具)
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/configuration_tool.jpg
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/configuration_software.jpg
+
+将WiFi数传配置线接上WIFI数传和电脑上,然后在电脑设备管理器查看识别到的串口号是多少,再打开配置软件,选择相应的串口号并点击搜索模块.点击搜索模块之后发现没响应,别急,继续看第三步.
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/view_com.jpg
+
+在第三步中就要使用工具刀了,第二步执行点击搜索模块之后,使用工具刀按下WiFi数传复位按钮,复位按钮的位置在远离WiFi数传信号线的那个孔里面,如下图所示.(有的WIFI数传外壳遮挡住了复位按钮,根据实际情况选择适当的工具)
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/reset_button.jpg
+
+进行第四步,复位按钮按下之后,继续点击搜索模块.这时候会出现两种情况,一种是下图错误提示无法打开com口,解决办法是重启电脑重新执行第一步到第三步.
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/open_com_failure.jpg
+
+另外一种情况是,点击搜索模块之后,出现如图所示找到设备com口就说明正确打开了串口,可以继续下一步配置了.
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/open_com_success.jpg
+
+第五步是配置WIFI数传为AP模式,如图所示,所有划红线部分为你手动选择或者手动添加内容,所有配置按照图片右边的具体配置一致即可,最后选择提交配置按钮.
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/configuration_ap.jpg
+
+第六步,提交配置之后,左边这一栏会显示刚才提交配置的信息,配置就算完成结束,别着急拔掉配置线,我们先测试一下配置的成功不成功.
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/test_is_ok.jpg
+
+继续连接WIFI,如下图所示
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/second_connetc_wifi.jpg
+
+然后打开终端,ping一下WIFI数传的IP,直接执行 ping 192.168.10.77
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/ping_success.jpg
+
+
+发现ping通了之后,说明刚才配置就算完成,拔掉配置线,接到飞控上面.准备连接地面站QGroundControl.
+
+打开QGC,选择 应用程序设置 菜单栏,继续选择 通讯连接 子项.下面有五种操作,分别为删除,编辑,添加,连接以及断开连接.
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/qgc123.jpg
+
+接下来,选择 添加 项,将类型选择由默认的serial(串口)改为TCP,上面的名称可改可不改.
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/qgc4.jpg
+
+下面的主机地址填写192.168.10.77(我们刚才ping通的地址,也就是WIFI数传配置好的IP地址),端口号填写为6000(注意和nomachine的默认端口号4000区分开).接着,右下角点击确认即可.
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/qgc567.jpg
+
+然后,选择刚添加的通讯连接,点击第四个连接操作连接到地面站.
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/qgc89.jpg
+
+最后可以看到QGC可以显示飞控相关姿态信息了.完成WiFi数传连接QGroundControl的过程.
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/qgc10.jpg
+
