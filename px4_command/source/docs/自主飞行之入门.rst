@@ -70,30 +70,8 @@ px4_command功能包是一个基于PX4开源固件及Mavros功能包的开源项
 4.飞行前准备
 ===============
 
-远程连接TX2与QGC
+WiFi数传两种配置模式
 ^^^^^^^^^^^^^^^^^^^^^^^
-
-需要的硬件:
-
--   1. 有HDMI接口的显示器一台(用于显示TX2，TX2连接你准备好的路由器的WiFi)
--   2. 带宽比较好的路由器一台
--   3. 安装有QGC地面站与NoMachine电脑一台或两台
-
-连接TX2与QGC:
-
--   根据WiFi-LINK配置模式有两种连接方式：
-
-WIFI-LINK配置成无线AP模式
-"""""""""""""""""""""""""""""""
-
-.. image:: ../images/XBEE_AP_mode.png
-
-这是我们发货时的默认配置，其中WiFi-LINK模块相当与一个热点，笔记本2要连接这个热点进而连接QGC，连接方法可参照 WIFI数传配置无线网卡模式连接路由器.md中第二章第三节。
-
-WiFi-LINK配置成无线网卡模式
-""""""""""""""""""""""""""""""""
-
-.. image:: ../images/XBEE_WLAN_mode.png
 
 .. tip::
 
@@ -101,6 +79,21 @@ WiFi-LINK配置成无线网卡模式
     `网盘链接 <https://pan.baidu.com/s/1t1zp2y1ikBSsJC8DNLjY_g>`_
     
     提取码: **exk3**
+
+根据WiFi-LINK配置模式有两种连接方式：一种是无线AP模式,另外一种无线网卡模式.出厂默认配置为AP模式,如需配置为无线网卡模式,可按照无线网卡模式说明文档自行配置
+
+WIFI-LINK配置成无线AP模式
+"""""""""""""""""""""""""""""""
+
+.. image:: ../images/XBEE_AP_mode.png
+
+这是我们发货时的默认配置，其中WiFi-LINK模块相当与一个热点，笔记本2要连接这个热点进而连接QGC.
+他们配置详细步骤请看WIFI数传远程连接QGroundControl非正常连接篇
+
+WiFi-LINK配置成无线网卡模式
+""""""""""""""""""""""""""""""""
+
+.. image:: ../images/XBEE_WLAN_mode.png
 
 **路由器设置**
 
@@ -155,7 +148,6 @@ ping不通那么你需要打开 RM08K config tool CN V2.1.exe
 
 .. image:: ../images/WIFI_RM08K_set_success.png
 
-**地面站以及NoMachine设置**
 
 -   地面站连接:此步骤需要笔记本连接WiFi路由器的后才可进行，而且你已经在笔记本上ping通了WiFi数传。
 
@@ -172,7 +164,158 @@ ping不通那么你需要打开 RM08K config tool CN V2.1.exe
 
 .. image:: ../images/WIFI_qgc_connect.png
 
--   NoMachine配置:此步骤需要英伟达TX2中的Ubuntu系统连接成功WiFi路由器，并在终端上输入ifconfig命令找到TX2的IP（我的TX2 IP为192.168.10.140）。
+
+WIFI数传远程连接QGroundControl
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+在WIFI数传连接QGroundControl的过程中,本小节文档中会分为两种情况来说明正常连接的过程以及非正常连接的过程.
+
+正常连接
+""""""""""""""""""""
+
+.. tip::
+
+    飞机说明:本教程飞机配置为TX2+T265+D435I+pixhawk4
+
+
+飞机整机图:
+
+
+.. image:: ../images/T265_User_Guide/TX2_series/vehicle.jpg
+
+
+飞机上面贴有标签,WIFI数传名字为amov-uav76.密码为amov19076.
+
+
+首先拿到飞机之后,上电,打开自己电脑WIFI,选择WIFI名为amov-uav76,并输入密码进行连接.(截图WIFI的连接图片)
+
+.. image:: ../images/T265_User_Guide/TX2_series/connect_to_qgc/search_for_wifi.jpg
+
+然后打开一个终端,ping一下WIFI数传的IP,192.168.10.76.(截图为WIFI数传配置成功的图片)
+
+.. image:: ../images/T265_User_Guide/TX2_series/connect_to_qgc/ping_success.jpg
+
+发现已经ping成功了,说明我们可以连接到QGroundControl地面站上面了.
+
+接着,打开QGC,第一步是打开 应用程序设置 菜单栏;第二步是选择 通讯连接 侧边栏;下面会出现五个可修改功能按钮,分别为删除,编辑,添加,连接,断开连接.第三步是点击 添加 按钮.(此处图片为qgc的连接1~3)
+
+.. image:: ../images/T265_User_Guide/TX2_series/connect_to_qgc/add_new_connect.jpg
+
+第四步是在类型旁边将原有的类型serial重选为TCP.(此处图片为第四步)
+
+.. image:: ../images/T265_User_Guide/TX2_series/connect_to_qgc/serial_seclect_tcp.jpg
+
+选择TCP类型之后,下面的输入框有所变化,主机地址就填写为192.168.10.76;端口号填写为6000,接着点击确认即可.(此处照片5~7)
+
+.. image:: ../images/T265_User_Guide/TX2_series/connect_to_qgc/write_vehicle_ip.jpg
+
+第八步是选中刚才添加的通讯连接,第九步点击下面的连接按钮,进行连接到QGC.(此处照片为8~9)
+
+.. image:: ../images/T265_User_Guide/TX2_series/connect_to_qgc/connect_to_qgc.jpg
+
+第十步就可以看到WIFI数传连接成功,地面站上显示飞控的各个信息.(此处照片为10)
+
+.. image:: ../images/T265_User_Guide/TX2_series/connect_to_qgc/wifi_connect_success.jpg
+
+
+非正常连接
+""""""""""""""""""""""
+
+.. tip::
+
+    飞机说明:本教程飞机配置为Nano+双目T265+A1+pixhawk4
+
+飞机整体图:
+
+.. image:: ../images/T265_User_Guide/Nano_series/vehicle.jpg
+
+飞机上面有标签,写的是有关WIFI数传的默认配置.例如本架飞机,我们出厂默认的WIFI数传配置为AP模式(数传是个热点,地面站连接热点).
+
+上电之后热点名称就为:amov-uav77,热点密码为:amov19077,电脑连接上WIFI
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/first_connect_wifi.jpg
+
+这时候你就可以在你连接热点的电脑打开终端(Windows下面Ctrl+r,输入cmd进入终端,Ubuntu下面直接右击鼠标打开termial),
+使用ping命令看是否能ping通热点.热点的IP为192.168.10.77.直接输入ping 192.168.10.77.
+如果ping通,说明就正常可以使用了.如果ping不通,那就是WIFI数传没有配置正确.可以看到是ping失败了,WIFI没有配置成功,你需要自己重新手动配置一下
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/ping_failure.jpg
+
+首先需要准备的东西有,配置软件RM08K config tool CN V2.1,和WIFI数传配置线以及工具刀(有的WiFi数传的复位按钮地方在里面,可能需要镊子或者较细的工具)
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/configuration_tool.jpg
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/configuration_software.jpg
+
+将WiFi数传配置线接上WIFI数传和电脑上,然后在电脑设备管理器查看识别到的串口号是多少,再打开配置软件,选择相应的串口号并点击搜索模块.点击搜索模块之后发现没响应,别急,继续看第三步.
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/view_com.jpg
+
+在第三步中就要使用工具刀了,第二步执行点击搜索模块之后,使用工具刀按下WiFi数传复位按钮,复位按钮的位置在远离WiFi数传信号线的那个孔里面,如下图所示.(有的WIFI数传外壳遮挡住了复位按钮,根据实际情况选择适当的工具)
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/reset_button.jpg
+
+进行第四步,复位按钮按下之后,继续点击搜索模块.这时候会出现两种情况,一种是下图错误提示无法打开com口,解决办法是重启电脑重新执行第一步到第三步.
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/open_com_failure.jpg
+
+另外一种情况是,点击搜索模块之后,出现如图所示找到设备com口就说明正确打开了串口,可以继续下一步配置了.
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/open_com_success.jpg
+
+第五步是配置WIFI数传为AP模式,如图所示,所有划红线部分为你手动选择或者手动添加内容,所有配置按照图片右边的具体配置一致即可,最后选择提交配置按钮.
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/configuration_ap.jpg
+
+第六步,提交配置之后,左边这一栏会显示刚才提交配置的信息,配置就算完成结束,别着急拔掉配置线,我们先测试一下配置的成功不成功.
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/test_is_ok.jpg
+
+继续连接WIFI,如下图所示
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/second_connetc_wifi.jpg
+
+然后打开终端,ping一下WIFI数传的IP,直接执行 ping 192.168.10.77
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/ping_success.jpg
+
+
+发现ping通了之后,说明刚才配置就算完成,拔掉配置线,接到飞控上面.准备连接地面站QGroundControl.
+
+打开QGC,选择 应用程序设置 菜单栏,继续选择 通讯连接 子项.下面有五种操作,分别为删除,编辑,添加,连接以及断开连接.
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/qgc123.jpg
+
+接下来,选择 添加 项,将类型选择由默认的serial(串口)改为TCP,上面的名称可改可不改.
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/qgc4.jpg
+
+下面的主机地址填写192.168.10.77(我们刚才ping通的地址,也就是WIFI数传配置好的IP地址),端口号填写为6000(注意和nomachine的默认端口号4000区分开).接着,右下角点击确认即可.
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/qgc567.jpg
+
+然后,选择刚添加的通讯连接,点击第四个连接操作连接到地面站.
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/qgc89.jpg
+
+最后可以看到QGC可以显示飞控相关姿态信息了.完成WiFi数传连接QGroundControl的过程.
+
+.. image:: ../images/T265_User_Guide/Nano_series/connect_to_qgc/qgc10.jpg
+
+
+
+
+
+远程连接TX2
+^^^^^^^^^^^^^^^^^^
+
+需要的硬件:
+
+-   1. 有HDMI接口的显示器一台(用于显示TX2，TX2连接你准备好的路由器的WiFi)
+-   2. 带宽比较好的路由器一台
+-   3. 安装有QGC地面站与NoMachine电脑一台或两台
+
+**NoMachine配置**:此步骤需要英伟达TX2中的Ubuntu系统连接成功WiFi路由器，并在终端上输入ifconfig命令找到TX2的IP（我的TX2 IP为192.168.10.140）。
 
 打开NOMACHINA软件，点击 New新建
 
@@ -200,20 +343,11 @@ Protrocol选择NX模式，然后输入TX2的IP地址192.168.10.140，Port默认4
 飞行环境说明
 ^^^^^^^^^^^^^^
 
-5.飞行模式说明
-==================
-
-
-室内飞行
-^^^^^^^^^^^^^
-
-
-激光SLAM
+室内环境
 """""""""""
 
-**NANO**
-
-**TX2**
+激光雷达
+************
 
 室内我们采用的激光雷达进行定位，因为采用的二维雷达，会在室内构建出如下的平面地图
 
@@ -228,28 +362,55 @@ Protrocol选择NX模式，然后输入TX2的IP地址192.168.10.140，Port默认4
 房间内有一些防护装置，房顶的防护网，地面的保护垫等等最好具备，防止伤人和损坏飞机。
 
 视觉SLAM
-""""""""""""""""
+*************
 
-**NANO**
+视觉的室内环境也是如上图所示环境,在室内可以添加一些桌椅板凳放置视觉前方,以便能有较好的特征点.
 
-**TX2**
+室外环境
+"""""""""""
 
+视觉SLAM
+*************
 
-经过上一节假设你已经成功连接上了QGC以及板载计算机了，若遇到困难请上论坛求助： `阿木社区论坛 <http://bbs.amovauto.com/>`_
+室外视觉的环境,可以选择在马路旁边的树下面,视觉所能覆盖的视野包括树,马路,以及楼区,这样特征点多一点,效果能好.
+在视觉slam中就尽可能不要选择空旷,单一特征点的地方,如操场.我们实验室经常测试视觉的环境,有马路,有草地,有房屋,
+如果视野只有单纯的草地,视觉定位就不是很好.容易漂移.
+
+GPS/RTK
+************
+
+室外使用GPS/RTK时,应当选择较为空旷地方,不要在房屋旁边或者树的旁边,搜星信号会很差.推荐在公园绿地或者操场中.
+
+5.自主飞行说明
+==================
+
+自主飞行可分为室内和室外两种模式,相应的室内分为激光SLAM飞行模式和视觉SLAM飞行模式,室外分为视觉SLAM飞行模式和GPS/RTK飞行模式.
+每一种飞行模式又对应分为TX2板载计算机和Nano板载计算机.在每一种飞行模式中,你就可以进行室内外相应的实现定点飞行,降落等.
+
+.. tip::
+
+    每一种飞行模式的位置来源有所不同,这里在QGroundControl地面站中有两个非常重要的参数,该参数决定了使用不同的飞行模式需要选择不同的位置数据来源
+    EKF2_AID_MASK和EKF2_HGT_MODE,前者是位置数据来源参数.后者是高度数据来源参数.
+
+室内飞行
+^^^^^^^^^^^^^
+
+激光SLAM
+"""""""""""
 
 室内激光雷达定位模式
 
--   EKF2_AID_MASK = 24 （选择位置以及偏航来源） ； EKF2_HGT_MODE = Vision（选择高度来源）   
--   限制飞机在position模式下的速度以及倾角 ：MPC_TILTMAX_AIR=8、MPC_XY_VEL_MAX=1、MPC_ZVEL_MAX_UP=1
+-   EKF2_AID_MASK = 24 （选择位置以及偏航来源） ； EKF2_HGT_MODE = Vision/Range sensor（选择高度来源）   
+
+**TX2**
+*************
 
 参数确定后尝试解锁，遇到解锁不成功，看看提示是否需要重新校准磁罗盘？解锁成功，电机启转，这时切记不要上浆试飞，
 因为此时激光雷达没有工作，没有给飞控送入位置以及高度信息，所以此时姿态控制失效，飞机一飞就会偏。这是我们固件
 的bug，近期会修复，请注意。
 
 
-把飞机放在室内待起飞点，远程已连接好板载计算机与飞控。
-
-在板载计算机系统里打开终端进入如下图所示目录并启动脚本：
+在TX2板载计算机系统里打开终端进入如下图所示目录并启动脚本：
 
 ::
 
@@ -265,125 +426,106 @@ Protrocol选择NX模式，然后输入TX2的IP地址192.168.10.140，Port默认4
 
 .. image:: ../images/qgc_reboot_vehicle.png
 
+**NANO**
+*************
+
+与TX2类似,找其相应的启动脚本即可.
+
+视觉SLAM
+""""""""""""""""
+
+室内视觉SLAM定位模式
+
+-   EKF2_AID_MASK = 24 （选择位置以及偏航来源） ； EKF2_HGT_MODE = Vision/Range sensor（选择高度来源）   
+
+**TX2**
+*************
+
+把飞机放在室内待起飞点，远程已连接好板载计算机与飞控。
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/nomachine_connect_tx2.jpg
+
+现在已经连接上了nomachine,第一步就是打开目录,进入到amov_ws/src/px4_command/sh/sh_for_P200/vio目录下面,待会准备启动的脚本为vio_fly.sh.(图片)
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/open_script_directory.jpg
+
+然后进行第二步,鼠标右击空白处选择打开一个终端(图片)
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/open_termial.jpg
+
+第三步输入启动脚本的执行指令 ./vio_fly.sh
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/startup_rplidar_fly.jpg
+
+第四步,启动脚本完成之后,自动开启脚本终端.第一个终端为 roscore 此处不做详解.查看mavros脚本是否正常启动,如果红圈内容说明mavros正常与飞控已经建立了通信连接.
+(如果出现报错的话,请仔细查看报错的内容原因是什么,坐标系相关的报错是正常的,不影响我们飞行使用).图片
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/mavros.jpg
+
+第五步,该脚本是T265驱动启动脚本,该脚本正常运行,说明T265已经正常启动.
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/t265_driver.jpg
+
+第六步,是T265的处理脚本,不是异常错误就是正常的,此脚本角T265的位置信息提供给了位置估计节点,以用作位置估计定位
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/t265_data_processing.jpg
+
+第七步,位置估计脚本,此处有多处打印消息,包含视觉信息,飞控信息,两者的各个数据基本保持动态波动就是正常的,波动很大就是非正常现象.如下图所示为正常.
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/estimator.jpg
+
+第八步,是位置控制节点,按照提示输入1继续,它是位置环参数的初始化.如果此处不输入1继续的话,你可以在室内进行定位飞行,但是不能切换到offboard模式.
+只有输入了1,确认位置环参数之后,才能进入offboard模式.
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/position_controller.jpg
+
+第九步,为move节点,正常启动.他可以控制飞机前后左右,位置速度控制飞行.
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/move.jpg
+
+此时你也可以用另外一台电脑连接到飞控中去,按照开箱第一步的教程执行.上面脚本如果都能正常运行的话,此时在遥控器上的5通道(三段)拨到中间,
+将飞行模式改为定点模式,在地面站QGC上面可以看到是可以切到定点飞行模式的,这就说明,此时可以在室内进行定点飞行了.
+
+.. image:: ../images/T265_User_Guide/TX2_series/execution_script/vehicle_state_from_qgc.jpg
+
+
+**NANO**
+*************
+
+使用操作和TX2类似,区别在于文件目录不一致.
+
 室外飞行
 ^^^^^^^^^^^^^^
 
 视觉SLAM
 """""""""""""
 
-室外开阔地带GPS搜星良好。
+-   EKF2_AID_MASK = 24 （选择位置以及偏航来源） ； EKF2_HGT_MODE = Barometric pressure/GPS/Vision（选择高度来源）   
 
-.. note::
+**TX2**
+*************
 
-    key：室外如果要测试圆跟踪或其他的需要用到板载计算机的功能，那么你需要
-    根据 **远程连接板载计算机与QGC** 那一节准备就序，当然如果你只是想
-    测试飞机的姿态或定位，那你只需要一个遥控器即可，不过需要修改下节中
-    PX4的若干参数。
+待续......
+
+**NANO**
+*************
 
 GPS/RTK
 """"""""""""""""""""""""""
 
--   源PX4参数调整：EKF2_AID_MASK = 1（选择位置以及偏航来源）； EKF2_HGT_MODE = Barometric pressure（选择高度来）
--   脚本修改：因为室外飞行我们不需要激光雷达和tfmini来定位定高，所以把相关的节点关闭即可。
+-   EKF2_AID_MASK = 1 （选择位置以及偏航来源） ； EKF2_HGT_MODE = Barometric pressure/GPS（选择高度来源）   
 
-.. image:: ../images/outdoor_circle_tracking_modify_sh.png
+**TX2**
+*************
 
+待续......
 
+**NANO**
+*************
 
-室内遥控position(定点)模式飞行
+经过入门本章内容,你就可以在室内外进行定点飞行,若遇到困难请上论坛求助： `阿木社区论坛 <http://bbs.amovauto.com/>`_ .
 
-启动脚本如下:
-
-::
-
-    ./my_lidar_imu_fly.sh
-
-.. image:: ../images/FS-i6s.jpg
-
-解锁后遥控器切到Position模式，油推到中位值以上，飞机就会起飞。
-
-室内offboard(板外)模式走四边形
-
-确保 **px4_pos_estimate** 节点的数据正确。
-
-在如下路径中启动脚本:
-
-::
-
-    ./my_square_imu.sh
-
-.. image:: ../images/indoor_my_square_imu.png
-
-然后在 **px4_pos_controller** 节点中确定参数
-
-.. image:: ../images/indoor_confirm_pos_controller.png
-
-最后确定并开始走四边形
-
-.. image:: ../images/indoor_enable_square_node.png
-
-.. warning::
-
-    走四边形之前要确保室内Position模式飞机能够定住，因为飞行环境不同
-    ，走四边形的过程中，飞机可能会发散，所以要时刻准备切回`Onboard`
-
-室外offboard(板外)模式跟踪圆
-
-根据上一章 **飞行准备** 中的 **室外飞行** 准备就绪.需要准备一个大小
-有要求的圆一个
-
-.. image:: ../images/outdoor_circle_tracking_picture.png
-
-以防万一，安全绳若干米，栓在飞机腿上。
-
-脚本修改与启动
-
-复制脚本 **circle_tracking.sh** 改名为 **circle_trancking_outdoor.sh**
-
-修改内容如下图:
-
-.. image:: ../images/outdoor_circle_tracking_modify_sh.png
-
-然后启动脚本,
-
-::
-
-    ./circle_trancking_outdoor.sh
-
-.. image:: ../images/outdoor_circle_tracking_confirm_pos_controller.png
-
-然后运行
-
-::
-
-    rqt_image_view
-
-查看圆检测是否正常。
-
-.. image:: ../images/outdoor_circle_tracking_detection_circle_.png
-
-最后
-
-.. image:: ../images/outdoor_circle_tracking_enable_node.png
-
-.. note::
-
-    其实室内也可以进行圆的跟踪，但是因为是激光雷达给的位置信息，
-    所有不确定因素比较多，测试时要小心。
-
-.. warning::
-
-    1. 飞机上电(电池采用4S电池，满点电压为16.8V,电池空电电压为14.4V)，飞机低于14.4V
-    必须充电，飞机上的电压指示等灭了必须充电。同时系统欠缺电压的化(低于14.4V)，电压监测
-    模块会报警，滴.滴.滴的声音！切记这时候要给飞机充电，否则会损坏电池。
-
-    .. image:: ../images/LowBattery_warning.jpg
-
-    2.在室内飞行时tfmini定高模块原理是激光的发射与接收，所以飞行时，不能让tfmini照到
-    能够反射光的地板上。如果你不能确定，你可以查看如下图`tfmini.launch`的节点，
-    然后拿起飞机来回垂直上下，看看有没有错误的数据。
-
-    .. image:: ../images/indoor_tfmini_detection.png
+在下一章自主飞行之进阶中,会详细讲解如何在室内进行move控制,自主跑四边形,室外圆跟踪等demo实现教程.
 
 
 

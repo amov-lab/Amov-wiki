@@ -125,6 +125,4 @@ px4_command功能包是一个基于Ardupilot/PX4开源固件及Mavros功能包�
     Gazebo仿真 <docs/Gazebo仿真>
     AirSim仿真 <docs/AirSim仿真>
     可选配件 <docs/可选配件>
-    t265飞机使用手册 <docs/T265飞机使用手册>
-    wifi数传 <docs/px4_command&WIFI数传配置>
 
