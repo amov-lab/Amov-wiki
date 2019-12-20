@@ -11,9 +11,8 @@ PX4提供了一种全自主飞行控制方式，offboard模式。而阿木社区
 对阿木系统体系的仿真模拟。有了这一套仿真系统，可以在不用实际飞行情况下理解阿木系统体系中的逻辑，
 减少实际飞行中炸机的发生。 本篇文章中，会讲解如何使用系统体系控制无人机飞行。本套仿真平台在
 Ubuntu16.04（16.04.6）LTS，ROS-Kinetic（1.12.14），
-Firmware（1.8.2），QGroundControl-v3.3.2，交叉编译
-工具链为gcc-arm-none-eabi-5_4-2016q2，mavros以及
-mavlink的二进制安装下，测试通过。先从搭建环境开始讲起吧。
+Firmware（1.9.2），QGroundControl-v3.3.2，交叉编译
+工具链为gcc-arm-none-eabi-7-2017-q4-major-linux，mavros的二进制安装，测试通过。先从搭建环境开始讲起吧。
 
 第一节 硬件准备
 ================
@@ -25,6 +24,16 @@ mavlink的二进制安装下，测试通过。先从搭建环境开始讲起吧�
 
 第二节 软件配置
 ================
+
+.. tip::
+
+    软件相关资料百度网盘链接如下:内容如下图所示,含有环境安装所需相关脚本,QGC三大系统的安装包,Ubuntu16.04长期支持版镜像文件,gcc7.2.0交叉编译工具包,以及最后的gazebo模型文件包.
+       
+    链接：https://pan.baidu.com/s/1wlLhcF07AAe0zTqcOdTEag 
+    提取码：uv2u 
+
+.. image:: ../images/gazebo_sim_baiduwangpan.png
+
 
 1.Ubuntu16.04操作系统
 -----------------------
@@ -46,7 +55,11 @@ mavlink的二进制安装下，测试通过。先从搭建环境开始讲起吧�
     插上U盘，开机启动选项中设置U盘启动即可，一般不同的电脑进
     入BIOS的方式不同。之后的安装很简单，百度上有很多教程，
     按照教程安装即可完成安装。本次安装是一块新的256固态硬盘,全盘直接安装的是Ubuntu系统，
-    所以没有什么分区设置。
+    所以没有什么分区设置。在安装完Ubuntu系统的第一件事情就是用户组的添加
+
+::
+
+    sudo usermod -a -G dialout $USER
 
 Ubuntu系统的技巧设置
 
@@ -64,7 +77,9 @@ Ubuntu系统的技巧设置
     与你显卡相匹配的驱动程序。以NVIDIA驱动为例，首先是查看自己
     显卡，发现是设备ID为1f08，通过 `NVIDIA驱动ID查看 <https://devicehunt.com/view/type/pci/vendor/10DE/device/1F08>`_
     搜索发现该驱动是GTX2060，然后我们到 `NVIDIA驱动程序下载 <https://www.nvidia.com/Download/index.aspx?lang=cn>`_ 下载相应的驱动
-    下载相应的驱动安装程序。安装的过程你可以参考这篇文档 `NVIDIA驱动安装 <https://zhuanlan.zhihu.com/p/31575356>`_ 
+    下载相应的驱动安装程序。安装的过程你可以参考这篇文档 `NVIDIA驱动安装 <https://zhuanlan.zhihu.com/p/31575356>`_ .在参考该文档的时候,
+    在安装驱动的时候可以不选择后面的可选配置,比如 -no-x-check,-no-nouveau-check 等选项.直接安装也可以,但是有时候,安装完成之后出现循环登录问题,请重新多安装几次(修改可选配置安装).
+
 
 ::
 
@@ -76,47 +91,52 @@ Ubuntu系统的技巧设置
 2.PX4环境安装
 ---------------
 
-参考官方文档 `Ubuntu下px4开发环境搭建 <https://dev.px4.io/master/en/setup/dev_env_linux_ubuntu.html>`_  .
+参考官方文档 `Ubuntu下px4开发环境搭建 <https://dev.px4.io/v1.8.2/en/setup/dev_env_linux_ubuntu.html>`_  .
 
 .. warning::
 
     该文档链接是在当时环境下的master文档,对应的是1.8.2的wiki文档,你现在所在的master页面是最新的wiki文档,你需要在左上角由master切换到1.8.2
 
-在安装完Ubuntu系统的第一件事情就是用户组的添加
+
+
+下载好软件相关资料,将安装脚本放置home下面,给脚本可执行权限并执行这个脚本。
 
 ::
 
-    sudo usermod -a -G dialout $USER
+    chmod +x sim_env.sh
+    sudo ./sim_env.sh
 
-然后按照官网教程，在~/下新建一个文件，重命名为ubuntu_sim.sh。在官网打开ubuntu_sim.sh脚本(打开不了说明你的网络不太好)，
-全部复制拷贝到新建的脚本中，接着给脚本可执行权限。最后执行这个脚本。
+这个安装的快慢与你的网速有关。这个脚本本身是没有安装交叉编译工具链,也没有下载Firmware固件的,也没有安装gazebo.该脚本如果你正常安装且没有安装错误,
+那么px4编译环境装好,然后再安装gazebo9软件,安装交叉编译工具包,最后下载px4固件Firmware,编译固件并编译仿真.
 
-::
-
-    sudo gedit ubuntu_sim.sh
-    chmod +x ubuntu_sim.sh
-    sudo ./ubuntu_sim.sh
-
-这个安装的快慢与你的网速有关。这个脚本本身是没有安装交叉编译工具链的。交叉编译工具链需要手动安装，
-接下来是手动安装交叉编译工具链： `交叉编译工具镜像下载 <https://bigsearcher.com/mirrors/gcc/releases/>`_ 
-下载你所需要的gcc版本。 下载之后解压并放到/opt/之下，下图所示本机的gcc的路径
+上面sim_env.sh脚本执行完成之后,然后安装gazebo9
 
 ::
 
-    amov@amov:/opt/gcc-arm-none-eabi-5_4-2016q2/bin$ pwd
-    /opt/gcc-arm-none-eabi-5_4-2016q2/bin
+    chmod +x gazebo9_env.sh
+    sudo ./gazebo9_env.sh
+
+
+接着安装交叉编译工具包，手动安装交叉编译工具链：下载软件相关资料,找到gcc-arm-none-eabi-7-2017-q4-major-linux.tar.bz2,
+之后复制(+sudo)放到/opt/之下，解压,下所示本机的gcc的路径
+
+::
+
+    amov@amov:/opt$ sudo tar -jxvf gcc-arm-none-eabi-7-2017-q4-major-linux.tar.bz2
+    amov@amov:/opt/gcc-arm-none-eabi-7-2017-q4-major/bin$ pwd
+    /opt/gcc-arm-none-eabi-7-2017-q4-major/bin
 
 然后打开/etc/profile文件，如下
 
 ::
 
-    amov@amov:/opt/gcc-arm-none-eabi-5_4-2016q2/bin$ sudo gedit /etc/profile
+    amov@amov:/opt/gcc-arm-none-eabi-7-2017-q4-major/bin$ sudo gedit /etc/profile
 
 在最下面添加一行
 
 ::
 
-    export PATH=$PATH:/opt/gcc-arm-none-eabi-5_4-2016q2/bin
+    export PATH=$PATH:/opt/gcc-arm-none-eabi-7-2017-q4-major/bin
 
 路径就是gcc存放的路径。接着source一下刚才修改的/etc/profile
 
@@ -134,9 +154,8 @@ Ubuntu系统的技巧设置
 
 ::
 
-    amov@amov:~$ arm-none-eabi-gcc --version
-    arm-none-eabi-gcc (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-branch revision 237715]
-    Copyright (C) 2015 Free Software Foundation, Inc.
+    arm-none-eabi-gcc (GNU Tools for Arm Embedded Processors 7-2017-q4-major) 7.2.1 20170904 (release) [ARM/embedded-7-branch revision 255204]
+    Copyright (C) 2017 Free Software Foundation, Inc.
     This is free software; see the source for copying conditions.  There is NO
     warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
@@ -180,7 +199,7 @@ Ubuntu系统的技巧设置
 
 ::
 
-    amov@amov:~/Desktop/px4-src/src-1.8.2/Firmware$ make px4_sitl_default gazebo
+    amov@amov:~/Desktop/px4-src/src-1.8.2/Firmware$ make posix_sitl_default gazebo
 
 到此为止，说明你的PX4环境配置已经搭建完成了。下来我们会配置与Ubuntu16.04系统对应的ROS Kinetic版本。
 
@@ -201,6 +220,10 @@ ROS-Kinetic的安装参考 `ROS-Kinetic官网安装教程 <http://wiki.ros.org/k
 .. tip::
 
     安装ROS（有700MB到800MB）完成之后，查看是否安装成功，如下表示安装ROS完成。
+       
+    特别注意,在上面我们安装好px4的编译环境时候,安装的gazebo9,在安装ROS-Ubuntu16.04-kinetic的时候,会默认将之前系统的gazebo卸载,并重新安装gazebo7.
+    但在实际过程中,gazebo9更为好使用,兼容性也更好,所以在安装ROS-kinetic时候不要选择安装 sudo apt-get install ros-kinetic-desktop-full ,
+    而应该选择 sudo apt-get install ros-kinetic-desktop.这点需切记.
 
 ::
 
@@ -236,7 +259,7 @@ ROS-Kinetic的安装参考 `ROS-Kinetic官网安装教程 <http://wiki.ros.org/k
 
 mavlink与mavros的安装参考 `mavros官方安装 <https://github.com/mavlink/mavros/blob/master/mavros/README.md#installation>`_
 
-最好最清晰的安装过程便是官方提供的步骤,以安装二进制源码的方式安装mavros,切记按照提示一步一步完成,
+最好最清晰的安装过程便是官方提供的步骤,以安装二进制的方式安装mavros,还需要安装geographiclib,可别忘了.
 
 5、下载QGroundControl
 -----------------------
