@@ -6,7 +6,7 @@
 
 Wiki主页: - https://amov-wiki.readthedocs.io/zh_CN/latest/
 
-社区论坛: - http://bbs.amovauto.com/
+社区论坛: - http://bbs.amovlab.com/
 
 在wiki里面会有P200的使用说明教程,机载电脑端的开源软件代码信息,还有基于Ubuntu16.04下的px4_command+gazebo进行软件仿真平台搭建的教程.
 
