@@ -89,4 +89,110 @@ xy水平速度会实时变化，有障碍物了x速度减少，y速度负增大�
 2.激光雷达室内建图定位
 ==============================
 
+在我们目前的P200飞机上搭载的默认激光雷达是可以实现定位并且可以建图。使用的激光SLAM算法为谷歌开源的cartographer。在p200真机中，为了节省板载计算机的cpu的使用率，我们做了一些设置，只是启动
+了rartographer_ros，让这个算法跑了起来，没有为其配置rviz.下面描述一下如何使用rplidar,cartographer_ros实时建图并且显示rviz下的地图。
+
+1.确保rplidar_ros能够正常启动激光雷达
+--------------------------------------------
+
+首先在终端输入命令  ``roslaunch rplidar_ros rplidar``
+
+启动成功需要注意两点，查看rplidar.launch文件中的serial_port（串口设备）和serial_baudrate(串口波特率)，如下图所示:
+
+.. image:: ../images/波特率.png
+
+查看爨口设备可通过命令：``ls /dev/ | grep ttyUSB``
+
+.. image:: ../images/查看USB.png
+
+查看设备为ttyUSB0,所以上图的serial_port为 ttyUSB0。
+
+其次是波特率的问题，激光雷达A2的波特率一般为115200，需要将激光雷达的中间转换模块的波特率和launch文件的波特率拨到一致，需要自行检查一下。
+
+上面两个注意到了，一般会正常启动rplidar。
+
+.. image:: ../images/frame_id.png
+
+还有一点需要注意的是，frame_id,在这里将其设置为horizontal_laser_link,这个改动后续会在cartographer_ros中用到。
+
+2.修改cartographer_ros
+-----------------------------------
+
+首先进入到如图所1标识的路径下，修改编辑my_lidar.launch，如下所示，添加如下图2标识的两段代码 ，保存。所添加的这两段的代码就是在启动cartographer_ros的时候启动一下
+rviz，进行显示。
+
+.. image:: ../images/1,2.png
+
+
+然后在3标识的路径下面，打开编辑my_lidar.lua文件，将4标识的第22行tracking_frame改为启动激光雷达launch文件中的frame_id，确保是一致的，
+修改为horizontal_laser_link。
+
+.. image:: ../images/3,4.png
+
+接着在5标识的路径下，编译cartographer_ros，使用如6标识的指令：``catkin_make_isolated --install  --use-ninja``
+
+.. image:: ../images/5,6.png
+
+3.建图演示
+-----------------------------------
+
+编译完成以后，启动激光雷达节点和cartographher_ros节点。打开两个终端terminal,一个如7标识启动激光雷达：``roslaunch rplidar_ros rplidar.launch``。
+另一个如8标识启动cartographer_ros: ``roslaunch cartorgapher_ros my_lidar.launch``。
+
+.. image:: ../images/7,8.png
+
+启动完成以后会自动打开rviz,并有雷达扫点，这就是正常的。如下图所示：
+
+.. image:: ../images/地图1.png
+
+
+打开建图map。1 点击add 2 点击topic 3 点击map 4 点击OK。
+
+.. image:: ../images/添加.png
+
+最后呈现的就是实时的地图数据了。
+
+.. image:: ../images/地图1.png
+
+4.在脚本中直接启动定位+建图
+-----------------------------------
+
+进入到9路径之下，拷贝lidar_fly.sh ，并重命名为lidar_fly_rviz.sh
+
+.. image:: ../images/9,10.png
+
+脚本内容为如下：
+
+.. image:: ../images/脚本内容.png
+
+启动该脚本，就可以在飞行中进行建图并查看建图效果了。
+
+.. image:: ../images/启动内容.png
+
+
+启动就完成了。
+
+如果存在疑问，欢迎在我们的论坛<https://bbs.amovlab.com/>提问
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
