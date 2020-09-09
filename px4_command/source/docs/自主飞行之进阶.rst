@@ -3,12 +3,15 @@
 ===================
 自主飞行之进阶
 ===================
+.. 一级标题: 
 
 1.vfh避障demo
 ===================
+.. 二级标题:
 
 a.更新px4_command功能包
 --------------------------------
+.. 三级标题:
 
 px4_command最新功能包在github上面。请点击链接 `px4_command <https://github.com/amov-lab/px4_command.git>`_ ,我们更新的不是master，而是分支 p200_200707 ,如下图：
 
@@ -21,6 +24,7 @@ px4_command最新功能包在github上面。请点击链接 `px4_command <https:
 
 b.更新rplidar_ros功能包
 ----------------------------
+.. 三级标题:
 
 我们通常使用的是思岚科技的A2，A3或者S1雷达，不管您是使用A2，A3还是S1雷达做避障，都建议更新一下激光雷达功能包。rplidar_ros的源码地址为 https://github.com/amov-lab/rplidar_ros.git
 
@@ -36,6 +40,7 @@ b.更新rplidar_ros功能包
 
 c.实际避障前说明
 ------------------------
+.. 三级标题:
 
 第一点、激光雷达的的正方向是有连接线的一边，我们称之为激光雷达的尾巴，正确的在飞机机架上的安装方式为，激光雷达的尾巴朝向飞机的机尾。这个很重要，不要搞错了！！！
 如果您拿到的飞机，激光雷达的尾巴是朝前的如果要使用室外激光雷达避障功能，请将激光雷达尾巴改为朝向飞机的机尾。一定注意！一定注意！！一定注意！！！
@@ -53,6 +58,7 @@ c.实际避障前说明
 
 d.避障过程
 ----------------------------
+.. 三级标题:
 
 避障可视化过程可仔细查看我们提供的视频demo讲解。
 
@@ -88,12 +94,14 @@ xy水平速度会实时变化，有障碍物了x速度减少，y速度负增大�
 
 2.激光雷达室内建图定位
 ==============================
+.. 二级标题:
 
 在我们目前的P200飞机上搭载的默认激光雷达是可以实现定位并且可以建图。使用的激光SLAM算法为谷歌开源的cartographer。在p200真机中，为了节省板载计算机的cpu的使用率，我们做了一些设置，只是启动
 了rartographer_ros，让这个算法跑了起来，没有为其配置rviz.下面描述一下如何使用rplidar,cartographer_ros实时建图并且显示rviz下的地图。
 
 1.确保rplidar_ros能够正常启动激光雷达
 --------------------------------------------
+.. 三级标题:
 
 首先在终端输入命令  ``roslaunch rplidar_ros rplidar``
 
@@ -117,12 +125,12 @@ xy水平速度会实时变化，有障碍物了x速度减少，y速度负增大�
 
 2.修改cartographer_ros
 -----------------------------------
+.. 三级标题:
 
 首先进入到如图所1标识的路径下，修改编辑my_lidar.launch，如下所示，添加如下图2标识的两段代码 ，保存。所添加的这两段的代码就是在启动cartographer_ros的时候启动一下
 rviz，进行显示。
 
 .. image:: ../images/1,2.png
-
 
 然后在3标识的路径下面，打开编辑my_lidar.lua文件，将4标识的第22行tracking_frame改为启动激光雷达launch文件中的frame_id，确保是一致的，
 修改为horizontal_laser_link。
@@ -135,6 +143,7 @@ rviz，进行显示。
 
 3.建图演示
 -----------------------------------
+.. 三级标题:
 
 编译完成以后，启动激光雷达节点和cartographher_ros节点。打开两个终端terminal,一个如7标识启动激光雷达：``roslaunch rplidar_ros rplidar.launch``。
 另一个如8标识启动cartographer_ros: ``roslaunch cartorgapher_ros my_lidar.launch``。
@@ -156,6 +165,7 @@ rviz，进行显示。
 
 4.在脚本中直接启动定位+建图
 -----------------------------------
+.. 三级标题:
 
 进入到9路径之下，拷贝lidar_fly.sh ，并重命名为lidar_fly_rviz.sh
 
@@ -174,8 +184,328 @@ rviz，进行显示。
 
 如果存在疑问，欢迎在我们的论坛<https://bbs.amovlab.com/>提问
 
+3.yolo通用目标检测
+===========================
+.. 二级标题:
+
+1、查看各个依赖环境是否正常
+---------------------------
+.. 三级标题:
+
+a、opencv
+^^^^^^^^^^^^^^
+.. 四级标题:
+
+使用 ``opencv_version`` 或者 ``pkg-config --modversion opencv`` ，如下图所示，安装的为opencv3.3.1
+
+.. image:: ../images/yolo_general_object_detection/opencv_version.png 
 
 
+b、cuda和cudnn
+^^^^^^^^^^^^^^^^^^^
+.. 四级标题:
+
+cuda和cudnn都已经安装成功，只是环境中没有把它使能。修改环境变量文件 .bashrc 。修改之前的环境变量，添加如下 ``export PATH="${PATH}:/usr/local/cuda-9.0/bin"`` ，因为cuda的路径就在 /usr/local/cuda-9.0 。
+
+.. image:: ../images/yolo_general_object_detection/bashrc_cuda.png
+
+.bashrc基本上没有太多修改，和上图环境保持一直即可。
+
+打开终端输入 ``nvcc -V`` ，如下图表示cuda是安装好的，并且可以使用。
+
+.. image:: ../images/yolo_general_object_detection/ncvv_V.png
+
+使用 ``dpkg -l | grep -i cuda`` 可以查看cuda相关的安装情况，如下图可以看出，我们安装的是 cuda9.0+cudvnn7.1.5.14，说明cuda和cudnn都已经安装成功，并可以正常使用。
+
+.. image:: ../images/yolo_general_object_detection/cudnn_cuda_ok.png
+
+
+
+2、下载darknet源码
+-----------------------------
+.. 三级标题
+
+源码地址： github  https://github.com/amov-lab/darknet.git
+
+码云 https://gitee.com/amovlab/darknet.git
+
+jetson tx2 Ubuntu16.04系统里面本身有个darknet包，请重新命名或者删除掉，然后下在上面的源码，建议使用码云，速度可能比较快一点。如果给出的码云地址无法克隆，可以将github的源码备份到自己的码云库里面，自行下载。
+
+.. image:: ../images/yolo_general_object_detection/clone_darknet.png
+
+
+3、修改并编译
+-----------------------------
+.. 三级标题
+
+需要修改 *Makefile* 文件，修改的内容如下：
+
+.. image:: ../images/yolo_general_object_detection/makefile.png
+
+用文本打开修改，修改和下图所示一致
+
+.. image:: ../images/yolo_general_object_detection/makefile_gedit.png
+
+然后执行 ``make -j4`` ，等待编译
+
+.. image:: ../images/yolo_general_object_detection/make_1.png
+
+编译完成之后，如下图所示
+
+.. image:: ../images/yolo_general_object_detection/make_2.png
+
+
+4、使用darknet
+-----------------------------
+.. 三级标题
+
+a、下载weights文件
+^^^^^^^^^^^^^^^^^^^^^^^^^
+.. 四级标题
+
+COCO data set (Yolo v2):
+ | wget http://pjreddie.com/media/files/yolov2.weights 
+ | wget http://pjreddie.com/media/files/yolov2-tiny.weights 
+
+VOC data set (Yolo v2):
+ | wget http://pjreddie.com/media/files/yolov2-voc.weights 
+ | wget http://pjreddie.com/media/files/yolov2-tiny-voc.weights 
+
+Yolo v3:
+ | wget http://pjreddie.com/media/files/yolov3.weights 
+ | wget http://pjreddie.com/media/files/yolov3-voc.weights 
+
+将下载好的weights文件放到darknet目录之下。
+
+b、使用单目摄像头进行yolo检测
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. 四级标题
+
+进入到 *darknet* 目录下，执行 ``./darknet detector demo cfg/coco.data cfg/yolov3.cfg yolov3.weights /dev/video0``  
+
+其中 `/dev/video0` 就是单目摄像头的检测到的设备驱动。
+
+.. image:: ../images/yolo_general_object_detection/darknet_start.png
+
+.. image:: ../images/yolo_general_object_detection/darknet_det.png
+
+yolov3的帧率只有4左右。如上图所示
+
+yolov3-tiny的帧率基本在23左右，如下图
+
+.. image:: ../images/yolo_general_object_detection/darknet_yolov3-tiny.png
+
+
+
+5、使用darknet_ros
+--------------------------
+.. 三级标题
+
+a、下载darknet_ros源码
+^^^^^^^^^^^^^^^^^^^^^^^^^
+.. 四级标题
+
+码云地址： https://gitee.com/eason_xinyi/darknet_ros.git
+
+删除 *TX2* 中 *vision_ws/src* 下面的darkent_ros功能包。从码云上面地址下载darkent_ros源码并更新子模块。执行如下指令： ``git clone https://gitee.com/eason_xinyi/darknet_ros.git`` 
+
+如下图所示：
+
+.. image:: ../images/yolo_general_object_detection/clone_darknet_ros.png
+
+下载完源码并进行更新，执行指令： ``git submodule update --init`` 
+
+如下图所示：
+
+.. image:: ../images/yolo_general_object_detection/clone_darknet_ros_submodule.png
+
+b、修改配置文件并编译
+^^^^^^^^^^^^^^^^^^^^^^^^^
+.. 四级标题
+
+darknet的Makefile文件修改并编译
+""""""""""""""""""""""""""""""""""
+.. 五级标题
+
+GPU=1，CUDNN=1，OPENCV=1，系统架构保留53和62，修改之后如下图所示：
+
+.. image:: ../images/yolo_general_object_detection/makefile_darknet_ros_gedit.png
+
+然后进行 ``make`` 编译，如下图：
+
+.. image:: ../images/yolo_general_object_detection/makefile_darknet_ros_compile.png
+
+等待编译完成，如下：
+
+.. image:: ../images/yolo_general_object_detection/makefile_darknet_ros_compile_ok.png
+
+darknet_ros文件配置
+""""""""""""""""""""""""""""""""""
+.. 五级标题
+
+添加 weights 包到 darknet_ros/yolo_network_config/weights 。提前下载好相关的 weights 包存放到U盘之内，然后拷贝到该路径之下。如下图：
+
+.. image:: ../images/yolo_general_object_detection/darknet_ros_add_weights.png
+
+添加cfg文件到 darknet_ros/yolo_network_config/cfg 。从home下面的darknet/cfg路径下拷贝需要的cfg文件到该目录路径之下。
+
+.. image:: ../images/yolo_general_object_detection/darknet_ros_add_cfg.png
+
+
+修改yolov3的launch文件，只要修改订阅相机图像的topic，修改为单目摄像头发布的topic。如下图：
+
+.. image:: ../images/yolo_general_object_detection/darknet_ros_modife_launch_yolov3.png
+
+
+添加 yolov3-tiny 。默认下载的只有yolov3，但实际上使用 yolov3 帧率很低，所以提前配置下 yolov3-tiny 。
+
+修改config文件，添加yolov3-tiny.yaml文件。修改方式只是修改config文件和weights文件，如下图：
+
+.. image:: ../images/yolo_general_object_detection/darknet_ros_add_cfg_yolov3_tiny.png
+
+添加yolov3-tiny的launch文件，可直接拷贝yolov3的launch，需要修改他的参数加载的配置文件，将yolov3改为yolov3-tiny。如下图所示：
+
+.. image:: ../images/yolo_general_object_detection/darknet_ros_add_launch_yolov3_tiny.png
+
+然后编译整个 vision_ws功能包，执行 ``catkin_make -DCMAKE_BUILD_TYPE=Release`` 
+
+.. image:: ../images/yolo_general_object_detection/darknet_ros_compile.png
+
+等待编译完成，如下图所示：
+
+.. image:: ../images/yolo_general_object_detection/darknet_ros_compile_ok.png
+
+c、单目darknet_ros使用
+^^^^^^^^^^^^^^^^^^^^^^^^^
+.. 四级标题
+
+在vision_ws/src下面，有ros_web_cam功能包，它可以将图像转换为ros下面的topic形式。上面内容中我们已经修改好，yolov3和yolov3-tiny的launch文件中图像的topic，所以我们直接进行ros版的darknet。
+
+yolov3
+""""""""""""
+.. 五级标题
+
+先启动yolov3的launch文件，执行 ``roslaunch darknet_ros yolo_v3.launch``  
+
+然后启动相机，执行 ``rosrun web_cam web_cam``  
+
+.. image:: ../images/yolo_general_object_detection/darknet_ros_yolov3.png
+
+.. image:: ../images/yolo_general_object_detection/darknet_ros_yolov3_1.png
+
+.. image:: ../images/yolo_general_object_detection/darknet_ros_yolov3_2.png
+
+由此可见，帧率只有3.0左右。接下来使用yolov3-tiny看看。
+
+
+
+yolov3-tiny
+""""""""""""""""""""
+.. 五级标题
+
+先运行 ``roslaunch darknet_ros yolo_v3_tiny.launch`` 
+
+接着运行 ``rosrun web_cam web_cam`` 
+
+.. image:: ../images/yolo_general_object_detection/darknet_ros_yolov3-tiny.png
+
+.. image:: ../images/yolo_general_object_detection/darknet_ros_add_launch_yolov3_tiny_1.png
+
+帧率明显看出来是提高了很多，延迟还是会有点。
+
+d、双目t265使用darknet_ros
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. 四级标题
+
+t265功能包代码更新
+""""""""""""""""""""""""
+.. 五级标题
+
+更新vision_to_mavros功能包，该功能包的路径在 `~/realsense_ws/src` ，可以使用git remote也可以直接删除该功能包，重新下载。
+
+vision_to_mavros功能包地址，码云gitee： https://gitee.com/eason_xinyi/vision_to_mavros.git
+
+删除之前的包，下载更新，如下 ``git clone https://gitee.com/eason_xinyi/vision_to_mavros.git``  
+
+切换到 `amov_200902` 分支之下，使用如下命令： ``git checkout amov_200902``
+
+`cd ../..` 进入到 `~/realsense_ws` 路径之下，执行 ``catkin_make`` 进行编译，如有报错，请提交issue。
+
+编译完成之后，代码更新完毕，代码增加了t265的畸变处理。
+
+
+
+修改畸变处理的配置文件：
+
+在路径 `~/realsense_ws/src/vision_to_mavros/cfg` 之下的 t265.yaml 文件。
+
+.. image:: ../images/yolo_general_object_detection/table1.png
+
+相机的内参矩阵K：
+
+.. image:: ../images/yolo_general_object_detection/table2.png
+
+t265接在tx2 USB3.0的接口之上（下面的USB口），打开一个终端，输入： ``rs-enumerate-devices -c`` 
+
+.. image:: ../images/yolo_general_object_detection/rs-enumerate-devices.png
+
+.. image:: ../images/yolo_general_object_detection/rs-enumerate-devices_fisheye1_to_fisheye2.png
+
+.. image:: ../images/yolo_general_object_detection/t265_yaml.png
+
+将 t265.yaml 中的所有参数 根据 ``rs-enumerate-devices -c`` 所查到的参数进行一一对应进行填写。
+
+
+
+运行t265畸变处理的效果：
+
+先运行t265的驱动： ``roslaunch realsense2_camera rs_t265.launch`` 
+
+再运行畸变处理程序： ``roslaunch vision_to_mavros t265_fisheye_undistort.launch`` 
+
+如下图所示，为原始图像以及对应的畸变处理之后的图像。
+
+.. image:: ../images/yolo_general_object_detection/rviz_t265.png 
+
+yolov3
+""""""""""""
+.. 五级标题
+
+修改yolo_v3.launch文件，将 image 参数改为 双目的topic ，我们改为 /camera/fisheye2/rect/image 。
+
+.. image:: ../images/yolo_general_object_detection/darknet_ros_add_launch_yolov3_tiny_2.png
+
+运行如下三个launch文件：
+
+``roslaunch realsense2_camera rs_t265.launch``
+
+``roslaunch vision_to_mavros t265_fisheye_undistort.launch`` 
+
+``roslaunch darknet_ros yolo_v3.launch``
+
+检测效果如下图：
+
+.. image:: ../images/yolo_general_object_detection/darknet_ros_yolov3_3.png
+.. image:: ../images/yolo_general_object_detection/darknet_ros_yolov3_4.png
+
+yolov3-tiny
+"""""""""""""
+.. 五级标题
+
+与yolov3一样的操作流程。
+
+运行如下三个launch文件：
+
+``roslaunch realsense2_camera rs_t265.launch``
+
+``roslaunch vision_to_mavros t265_fisheye_undistort.launch``
+
+``roslaunch darknet_ros yolo_v3_tiny.launch``
+
+检测效果如下图：
+
+.. image:: ../images/yolo_general_object_detection/darknet_ros_yolov3-tiny_1.png
+.. image:: ../images/yolo_general_object_detection/darknet_ros_yolov3-tiny_2.png
 
 
 
