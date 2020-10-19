@@ -45,7 +45,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Amov-wiki'
+project = u'p200-wiki'
 copyright = u'2019, Amov Dev Team'
 author = u'AMOV Dev Team'
 
