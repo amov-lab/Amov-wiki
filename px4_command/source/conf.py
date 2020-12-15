@@ -117,6 +117,14 @@ html_theme = "sphinx_rtd_theme"
 # further.  For a list of options available for each theme, see the
 # documentation.
 #html_theme_options = {}
+html_theme_options = {
+    'analytics_id': 'UA-84548828-3',
+    'versions': {
+        'Amov-wiki': 'index',
+        'Brother': '../brother/index',
+    },
+    'navigation_depth': 8
+}
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
